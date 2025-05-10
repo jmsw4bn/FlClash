@@ -28,5 +28,5 @@ jobs:
         uses: actions/setup-go@v5.5.0
       - run: go version
 
-      - name: Run release
-        run: dart setup.dart linux --arch amd64
+      - run: dart pub get
+      - run: dart setup.dart linux --arch amd64
