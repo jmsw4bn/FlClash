@@ -36,7 +36,7 @@ jobs:
 
       # 4. 导出生成的可执行文件
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: flclash-linux-amd64
           path: dist/**/*
