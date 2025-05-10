@@ -37,5 +37,5 @@ jobs:
       - name: Run tests
         run: dart test
 
-      - name: Run tests
+      - name: Run release
         run: dart .\setup.dart linux --arch amd64
