@@ -34,14 +34,10 @@ jobs:
       - run: dart pub get
       - run: dart setup.dart linux --arch amd64
 
-      # 创建Release并上传dist目录下的所有文件
-      - name: Create Release and Upload Assets
-        uses: softprops/action-gh-release@v1
+      # 4. 导出生成的可执行文件
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
         with:
-          name: Release ${{ github.ref_name }}
-          tag_name: ${{ github.ref }}
-          files: dist/**/*
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: flclash-linux-amd64
+          path: dist/**/*
+          retention-days: 7
