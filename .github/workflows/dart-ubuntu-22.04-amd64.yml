@@ -17,17 +17,16 @@ jobs:
 
       # 2. 安装 Flutter
       - name: Install Flutter
-        uses: geowatson/flutter-latest@1.0.1
+        uses: subosito/flutter-action@v2
+        with:
+          channel: dev
+          flutter-version: 1.22.x
+      - run: flutter --version
         
       # 3. 安装 Go
       - name: Install Go
         uses: actions/setup-go@v5.5.0
-
-      # 验证环境
-      - name: Verify installations
-        run: |
-          flutter --version
-          go version
+        - run: go version
 
       - name: Run release
         run: dart .\setup.dart linux --arch amd64
