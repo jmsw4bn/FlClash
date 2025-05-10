@@ -12,8 +12,11 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-      # 1. 自动检测处理 Git 子模块
-      - uses: actions/checkout@v4
+      # 1. 检查子模块
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
 
       # 2. 安装 Flutter
       - name: Install Flutter
