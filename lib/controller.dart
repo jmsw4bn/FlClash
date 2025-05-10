@@ -30,8 +30,9 @@ class AppController {
   AppController(this.context, WidgetRef ref) : _ref = ref;
 
   updateClashConfigDebounce() {
-    debouncer.call(DebounceTag.updateClashConfig, () {
-      updateClashConfig(true);
+    debouncer.call(DebounceTag.updateClashConfig, () async {
+      final isPatch = globalState.appState.needApply ? false : true;
+      await updateClashConfig(isPatch);
     });
   }
 
@@ -70,7 +71,7 @@ class AppController {
 
   restartCore() async {
     await clashService?.reStart();
-    await initCore();
+    await _initCore();
 
     if (_ref.read(runTimeProvider.notifier).isStart) {
       await globalState.handleStart();
@@ -100,7 +101,6 @@ class AppController {
       _ref.read(trafficsProvider.notifier).clear();
       _ref.read(totalTrafficProvider.notifier).value = Traffic();
       _ref.read(runTimeProvider.notifier).value = null;
-      // tray.updateTrayTitle(null);
       addCheckIpNumDebounce();
     }
   }
@@ -153,7 +153,7 @@ class AppController {
   updateLocalIp() async {
     _ref.read(localIpProvider.notifier).value = null;
     await Future.delayed(commonDuration);
-    _ref.read(localIpProvider.notifier).value = await other.getLocalIpAddress();
+    _ref.read(localIpProvider.notifier).value = await utils.getLocalIpAddress();
   }
 
   Future<void> updateProfile(Profile profile) async {
@@ -260,9 +260,7 @@ class AppController {
     final patchConfig = _ref.read(patchClashConfigProvider);
     final appSetting = _ref.read(appSettingProvider);
     bool enableTun = patchConfig.tun.enable;
-    if (enableTun != lastTunEnable &&
-        lastTunEnable == false &&
-        !Platform.isAndroid) {
+    if (enableTun != lastTunEnable && lastTunEnable == false) {
       final code = await system.authorizeCore();
       switch (code) {
         case AuthorizeCode.none:
@@ -283,6 +281,9 @@ class AppController {
     final res = await clashCore.updateConfig(
       globalState.getUpdateConfigParams(isPatch),
     );
+    if (isPatch == false) {
+      _ref.read(needApplyProvider.notifier).value = false;
+    }
     if (res.isNotEmpty) throw res;
     lastTunEnable = enableTun;
     lastProfileModified = await profile?.profileLastModified;
@@ -311,6 +312,10 @@ class AppController {
   handleChangeProfile() {
     _ref.read(delayDataSourceProvider.notifier).value = {};
     applyProfile();
+    _ref.read(logsProvider.notifier).value = FixedList(500);
+    _ref.read(requestsProvider.notifier).value = FixedList(500);
+    globalState.cacheHeightMap = {};
+    globalState.cacheScrollPosition = {};
   }
 
   updateBrightness(Brightness brightness) {
@@ -331,23 +336,22 @@ class AppController {
       try {
         await updateProfile(profile);
       } catch (e) {
-        _ref.read(logsProvider.notifier).addLog(
-              Log(
-                logLevel: LogLevel.info,
-                payload: e.toString(),
-              ),
-            );
+        commonPrint.log(e.toString());
       }
     }
   }
 
   Future<void> updateGroups() async {
-    _ref.read(groupsProvider.notifier).value = await retry(
-      task: () async {
-        return await clashCore.getProxiesGroups();
-      },
-      retryIf: (res) => res.isEmpty,
-    );
+    try {
+      _ref.read(groupsProvider.notifier).value = await retry(
+        task: () async {
+          return await clashCore.getProxiesGroups();
+        },
+        retryIf: (res) => res.isEmpty,
+      );
+    } catch (_) {
+      _ref.read(groupsProvider.notifier).value = [];
+    }
   }
 
   updateProfiles() async {
@@ -357,10 +361,6 @@ class AppController {
       }
       await updateProfile(profile);
     }
-  }
-
-  updateSystemColorSchemes(ColorSchemes colorSchemes) {
-    _ref.read(appSchemesProvider.notifier).value = colorSchemes;
   }
 
   savePreferences() async {
@@ -398,13 +398,21 @@ class AppController {
   handleExit() async {
     try {
       await updateStatus(false);
+      await proxy?.stopProxy();
       await clashCore.shutdown();
       await clashService?.destroy();
-      await proxy?.stopProxy();
       await savePreferences();
     } finally {
       system.exit();
     }
+  }
+
+  Future handleClear() async {
+    await preferences.clearPreferences();
+    commonPrint.log("clear preferences");
+    globalState.config = Config(
+      themeProps: defaultThemeProps,
+    );
   }
 
   autoCheckUpdate() async {
@@ -417,13 +425,13 @@ class AppController {
     Map<String, dynamic>? data,
     bool handleError = false,
   }) async {
-    if(globalState.isPre){
+    if (globalState.isPre) {
       return;
     }
     if (data != null) {
       final tagName = data['tag_name'];
       final body = data['body'];
-      final submits = other.parseReleaseBody(body);
+      final submits = utils.parseReleaseBody(body);
       final textTheme = context.textTheme;
       final res = await globalState.showMessage(
         title: appLocalizations.discoverNewVersion,
@@ -478,13 +486,13 @@ class AppController {
     await handleExit();
   }
 
-  Future<void> initCore() async {
+  Future<void> _initCore() async {
     final isInit = await clashCore.isInit;
     if (!isInit) {
+      await clashCore.init();
       await clashCore.setState(
         globalState.getCoreState(),
       );
-      await clashCore.init();
     }
     await applyProfile();
   }
@@ -492,7 +500,7 @@ class AppController {
   init() async {
     await _handlePreference();
     await _handlerDisclaimer();
-    await initCore();
+    await _initCore();
     await _initStatus();
     updateTray(true);
     autoLaunch?.updateStatus(
@@ -668,9 +676,9 @@ class AppController {
   List<Proxy> _sortOfName(List<Proxy> proxies) {
     return List.of(proxies)
       ..sort(
-        (a, b) => other.sortByChar(
-          other.getPinyin(a.name),
-          other.getPinyin(b.name),
+        (a, b) => utils.sortByChar(
+          utils.getPinyin(a.name),
+          utils.getPinyin(b.name),
         ),
       );
   }
@@ -860,7 +868,7 @@ class AppController {
       return utf8.encode(logsRawString);
     });
     return await picker.saveFile(
-          other.logFile,
+          utils.logFile,
           Uint8List.fromList(data),
         ) !=
         null;
@@ -934,30 +942,39 @@ class AppController {
   }
 
   _recovery(Config config, RecoveryOption recoveryOption) {
+    final recoveryStrategy = _ref.read(appSettingProvider.select(
+      (state) => state.recoveryStrategy,
+    ));
     final profiles = config.profiles;
-    for (final profile in profiles) {
-      _ref.read(profilesProvider.notifier).setProfile(profile);
+    if (recoveryStrategy == RecoveryStrategy.override) {
+      _ref.read(profilesProvider.notifier).value = profiles;
+    } else {
+      for (final profile in profiles) {
+        _ref.read(profilesProvider.notifier).setProfile(
+              profile,
+            );
+      }
     }
     final onlyProfiles = recoveryOption == RecoveryOption.onlyProfiles;
-    if (onlyProfiles) {
-      final currentProfile = _ref.read(currentProfileProvider);
-      if (currentProfile != null) {
-        _ref.read(currentProfileIdProvider.notifier).value = profiles.first.id;
-      }
-      return;
+    if (!onlyProfiles) {
+      _ref.read(patchClashConfigProvider.notifier).value =
+          config.patchClashConfig;
+      _ref.read(appSettingProvider.notifier).value = config.appSetting;
+      _ref.read(currentProfileIdProvider.notifier).value =
+          config.currentProfileId;
+      _ref.read(appDAVSettingProvider.notifier).value = config.dav;
+      _ref.read(themeSettingProvider.notifier).value = config.themeProps;
+      _ref.read(windowSettingProvider.notifier).value = config.windowProps;
+      _ref.read(vpnSettingProvider.notifier).value = config.vpnProps;
+      _ref.read(proxiesStyleSettingProvider.notifier).value =
+          config.proxiesStyle;
+      _ref.read(overrideDnsProvider.notifier).value = config.overrideDns;
+      _ref.read(networkSettingProvider.notifier).value = config.networkProps;
+      _ref.read(hotKeyActionsProvider.notifier).value = config.hotKeyActions;
     }
-    _ref.read(patchClashConfigProvider.notifier).value =
-        config.patchClashConfig;
-    _ref.read(appSettingProvider.notifier).value = config.appSetting;
-    _ref.read(currentProfileIdProvider.notifier).value =
-        config.currentProfileId;
-    _ref.read(appDAVSettingProvider.notifier).value = config.dav;
-    _ref.read(themeSettingProvider.notifier).value = config.themeProps;
-    _ref.read(windowSettingProvider.notifier).value = config.windowProps;
-    _ref.read(vpnSettingProvider.notifier).value = config.vpnProps;
-    _ref.read(proxiesStyleSettingProvider.notifier).value = config.proxiesStyle;
-    _ref.read(overrideDnsProvider.notifier).value = config.overrideDns;
-    _ref.read(networkSettingProvider.notifier).value = config.networkProps;
-    _ref.read(hotKeyActionsProvider.notifier).value = config.hotKeyActions;
+    final currentProfile = _ref.read(currentProfileProvider);
+    if (currentProfile == null) {
+      _ref.read(currentProfileIdProvider.notifier).value = profiles.first.id;
+    }
   }
 }

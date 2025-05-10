@@ -8,6 +8,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'models.dart';
 
 part 'generated/config.freezed.dart';
+
 part 'generated/config.g.dart';
 
 const defaultBypassDomain = [
@@ -36,9 +37,8 @@ const defaultNetworkProps = NetworkProps();
 const defaultProxiesStyle = ProxiesStyle();
 const defaultWindowProps = WindowProps();
 const defaultAccessControl = AccessControl();
-final defaultThemeProps = ThemeProps().copyWith(
-  primaryColor: defaultPrimaryColor.toARGB32(),
-  themeMode: ThemeMode.dark,
+final defaultThemeProps = ThemeProps(
+  primaryColor: defaultPrimaryColor,
 );
 
 const List<DashboardWidget> defaultDashboardWidgets = [
@@ -84,6 +84,8 @@ class AppSettingProps with _$AppSettingProps {
     @Default(false) bool disclaimerAccepted,
     @Default(true) bool minimizeOnExit,
     @Default(false) bool hidden,
+    @Default(false) bool developerMode,
+    @Default(RecoveryStrategy.compatible) RecoveryStrategy recoveryStrategy,
   }) = _AppSettingProps;
 
   factory AppSettingProps.fromJson(Map<String, Object?> json) =>
@@ -105,6 +107,7 @@ class AccessControl with _$AccessControl {
     @Default([]) List<String> rejectList,
     @Default(AccessSortType.none) AccessSortType sort,
     @Default(true) bool isFilterSystemApp,
+    @Default(true) bool isFilterNonInternetApp,
   }) = _AccessControl;
 
   factory AccessControl.fromJson(Map<String, Object?> json) =>
@@ -142,7 +145,7 @@ class VpnProps with _$VpnProps {
   }) = _VpnProps;
 
   factory VpnProps.fromJson(Map<String, Object?>? json) =>
-      json == null ? const VpnProps() : _$VpnPropsFromJson(json);
+      json == null ? defaultVpnProps : _$VpnPropsFromJson(json);
 }
 
 @freezed
@@ -173,11 +176,25 @@ class ProxiesStyle with _$ProxiesStyle {
 }
 
 @freezed
+class TextScale with _$TextScale {
+  const factory TextScale({
+    @Default(false) enable,
+    @Default(1.0) scale,
+  }) = _TextScale;
+
+  factory TextScale.fromJson(Map<String, Object?> json) =>
+      _$TextScaleFromJson(json);
+}
+
+@freezed
 class ThemeProps with _$ThemeProps {
   const factory ThemeProps({
     int? primaryColor,
-    @Default(ThemeMode.system) ThemeMode themeMode,
+    @Default(defaultPrimaryColors) List<int> primaryColors,
+    @Default(ThemeMode.dark) ThemeMode themeMode,
+    @Default(DynamicSchemeVariant.content) DynamicSchemeVariant schemeVariant,
     @Default(false) bool pureBlack,
+    @Default(TextScale()) TextScale textScale,
   }) = _ThemeProps;
 
   factory ThemeProps.fromJson(Map<String, Object?> json) =>

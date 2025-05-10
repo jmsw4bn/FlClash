@@ -62,6 +62,22 @@ class OpenDelegate extends Delegate {
   });
 }
 
+class NextDelegate extends Delegate {
+  final Widget widget;
+  final String title;
+  final double? maxWidth;
+  final Widget? action;
+  final bool blur;
+
+  const NextDelegate({
+    required this.title,
+    required this.widget,
+    this.maxWidth,
+    this.action,
+    this.blur = true,
+  });
+}
+
 class OptionsDelegate<T> extends Delegate {
   final List<T> options;
   final String title;
@@ -131,6 +147,21 @@ class ListItem<T> extends StatelessWidget {
     this.padding = const EdgeInsets.symmetric(horizontal: 16),
     this.trailing,
     required OpenDelegate this.delegate,
+    this.horizontalTitleGap,
+    this.dense,
+    this.titleTextStyle,
+    this.subtitleTextStyle,
+    this.tileTitleAlignment = ListTileTitleAlignment.center,
+  }) : onTap = null;
+
+  const ListItem.next({
+    super.key,
+    required this.title,
+    this.subtitle,
+    this.leading,
+    this.padding = const EdgeInsets.symmetric(horizontal: 16),
+    this.trailing,
+    required NextDelegate this.delegate,
     this.horizontalTitleGap,
     this.dense,
     this.titleTextStyle,
@@ -226,6 +257,7 @@ class ListItem<T> extends StatelessWidget {
       leading: leading ?? this.leading,
       horizontalTitleGap: horizontalTitleGap,
       title: title,
+      minVerticalPadding: 12,
       subtitle: subtitle,
       titleAlignment: tileTitleAlignment,
       onTap: onTap,
@@ -278,6 +310,37 @@ class ListItem<T> extends StatelessWidget {
             onBack: action,
             title: openDelegate.title,
             body: child,
+            actions: [
+              if (openDelegate.action != null) openDelegate.action!,
+            ],
+          );
+        },
+      );
+    }
+    if (delegate is NextDelegate) {
+      final nextDelegate = delegate as NextDelegate;
+      final child = SafeArea(
+        child: nextDelegate.widget,
+      );
+
+      return _buildListTile(
+        onTap: () {
+          showExtend(
+            context,
+            props: ExtendProps(
+              blur: nextDelegate.blur,
+              maxWidth: nextDelegate.maxWidth,
+            ),
+            builder: (_, type) {
+              return AdaptiveSheetScaffold(
+                actions: [
+                  if (nextDelegate.action != null) nextDelegate.action!,
+                ],
+                type: type,
+                body: child,
+                title: nextDelegate.title,
+              );
+            },
           );
         },
       );
@@ -350,14 +413,11 @@ class ListItem<T> extends StatelessWidget {
             radioDelegate.onChanged!(radioDelegate.value);
           }
         },
-        leading: SizedBox(
-          width: 32,
-          height: 32,
-          child: Radio<T>(
-            value: radioDelegate.value,
-            groupValue: radioDelegate.groupValue,
-            onChanged: radioDelegate.onChanged,
-          ),
+        leading: Radio<T>(
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          value: radioDelegate.value,
+          groupValue: radioDelegate.groupValue,
+          onChanged: radioDelegate.onChanged,
         ),
         trailing: trailing,
       );
@@ -463,6 +523,32 @@ List<Widget> generateSection({
   ];
 }
 
+Widget generateSectionV2({
+  String? title,
+  required Iterable<Widget> items,
+  List<Widget>? actions,
+  bool separated = true,
+}) {
+  return Column(
+    children: [
+      if (items.isNotEmpty && title != null)
+        ListHeader(
+          title: title,
+          actions: actions,
+        ),
+      CommonCard(
+        radius: 18,
+        type: CommonCardType.filled,
+        child: Column(
+          children: [
+            ...items,
+          ],
+        ),
+      )
+    ],
+  );
+}
+
 List<Widget> generateInfoSection({
   required Info info,
   required Iterable<Widget> items,
@@ -494,133 +580,4 @@ Widget generateListView(List<Widget> items) {
       bottom: 16,
     ),
   );
-}
-
-class CacheItemExtentListView extends StatefulWidget {
-  final NullableIndexedWidgetBuilder itemBuilder;
-  final int itemCount;
-  final String Function(int index) keyBuilder;
-  final double Function(int index) itemExtentBuilder;
-  final ScrollPhysics? physics;
-  final bool shrinkWrap;
-  final bool reverse;
-  final ScrollController controller;
-
-  const CacheItemExtentListView({
-    super.key,
-    this.physics,
-    this.reverse = false,
-    this.shrinkWrap = false,
-    required this.itemBuilder,
-    required this.controller,
-    required this.keyBuilder,
-    required this.itemCount,
-    required this.itemExtentBuilder,
-  });
-
-  @override
-  State<CacheItemExtentListView> createState() =>
-      CacheItemExtentListViewState();
-}
-
-class CacheItemExtentListViewState extends State<CacheItemExtentListView> {
-  late final FixedMap<String, double> _cacheHeightMap;
-
-  @override
-  void initState() {
-    super.initState();
-    _cacheHeightMap = FixedMap(widget.itemCount);
-  }
-
-  clearCache() {
-    _cacheHeightMap.clear();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    _cacheHeightMap.updateMaxSize(widget.itemCount);
-    return ListView.builder(
-      itemBuilder: widget.itemBuilder,
-      itemCount: widget.itemCount,
-      physics: widget.physics,
-      reverse: widget.reverse,
-      shrinkWrap: widget.shrinkWrap,
-      controller: widget.controller,
-      itemExtentBuilder: (index, __) {
-        final key = widget.keyBuilder(index);
-        if (_cacheHeightMap.containsKey(key)) {
-          return _cacheHeightMap.get(key);
-        }
-        return _cacheHeightMap.put(key, widget.itemExtentBuilder(index));
-      },
-    );
-  }
-
-  @override
-  void dispose() {
-    _cacheHeightMap.clear();
-    super.dispose();
-  }
-}
-
-class CacheItemExtentSliverReorderableList extends StatefulWidget {
-  final IndexedWidgetBuilder itemBuilder;
-  final int itemCount;
-  final String Function(int index) keyBuilder;
-  final double Function(int index) itemExtentBuilder;
-  final ReorderCallback onReorder;
-  final ReorderItemProxyDecorator? proxyDecorator;
-
-  const CacheItemExtentSliverReorderableList({
-    super.key,
-    required this.itemBuilder,
-    required this.keyBuilder,
-    required this.itemCount,
-    required this.itemExtentBuilder,
-    required this.onReorder,
-    this.proxyDecorator,
-  });
-
-  @override
-  State<CacheItemExtentSliverReorderableList> createState() =>
-      CacheItemExtentSliverReorderableListState();
-}
-
-class CacheItemExtentSliverReorderableListState
-    extends State<CacheItemExtentSliverReorderableList> {
-  late final FixedMap<String, double> _cacheHeightMap;
-
-  @override
-  void initState() {
-    super.initState();
-    _cacheHeightMap = FixedMap(widget.itemCount);
-  }
-
-  clearCache() {
-    _cacheHeightMap.clear();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    _cacheHeightMap.updateMaxSize(widget.itemCount);
-    return SliverReorderableList(
-      itemBuilder: widget.itemBuilder,
-      itemCount: widget.itemCount,
-      itemExtentBuilder: (index, __) {
-        final key = widget.keyBuilder(index);
-        if (_cacheHeightMap.containsKey(key)) {
-          return _cacheHeightMap.get(key);
-        }
-        return _cacheHeightMap.put(key, widget.itemExtentBuilder(index));
-      },
-      onReorder: widget.onReorder,
-      proxyDecorator: widget.proxyDecorator,
-    );
-  }
-
-  @override
-  void dispose() {
-    _cacheHeightMap.clear();
-    super.dispose();
-  }
 }

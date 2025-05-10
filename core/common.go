@@ -41,6 +41,7 @@ func splitByMultipleSeparators(s string) interface{} {
 }
 
 var (
+	version   = 0
 	isRunning = false
 	runLock   sync.Mutex
 	ips       = []string{"ipwho.is", "api.ip.sb", "ipapi.co", "ipinfo.io"}
@@ -77,7 +78,6 @@ func getRawConfigWithId(id string) *config.RawConfig {
 	path := getProfilePath(id)
 	bytes, err := readFile(path)
 	if err != nil {
-		log.Errorln("profile is not exist")
 		return config.DefaultRawConfig()
 	}
 	prof, err := config.UnmarshalRawConfig(bytes)
@@ -274,7 +274,6 @@ func patchConfig() {
 	dialer.DefaultInterface.Store(general.Interface)
 	adapter.UnifiedDelay.Store(general.UnifiedDelay)
 	tunnel.SetMode(general.Mode)
-	tunnel.UpdateRules(currentConfig.Rules, currentConfig.SubRules, currentConfig.RuleProviders)
 	log.SetLevel(general.LogLevel)
 	resolver.DisableIPv6 = !general.IPv6
 

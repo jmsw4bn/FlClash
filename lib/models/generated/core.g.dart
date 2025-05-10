@@ -100,6 +100,18 @@ Map<String, dynamic> _$$UpdateConfigParamsImplToJson(
       'params': instance.params,
     };
 
+_$InitParamsImpl _$$InitParamsImplFromJson(Map<String, dynamic> json) =>
+    _$InitParamsImpl(
+      homeDir: json['home-dir'] as String,
+      version: (json['version'] as num).toInt(),
+    );
+
+Map<String, dynamic> _$$InitParamsImplToJson(_$InitParamsImpl instance) =>
+    <String, dynamic>{
+      'home-dir': instance.homeDir,
+      'version': instance.version,
+    };
+
 _$ChangeProxyParamsImpl _$$ChangeProxyParamsImplFromJson(
         Map<String, dynamic> json) =>
     _$ChangeProxyParamsImpl(
@@ -333,6 +345,7 @@ const _$ActionMethodEnumMap = {
   ActionMethod.getCountryCode: 'getCountryCode',
   ActionMethod.getMemory: 'getMemory',
   ActionMethod.getProfile: 'getProfile',
+  ActionMethod.crash: 'crash',
   ActionMethod.setFdMap: 'setFdMap',
   ActionMethod.setProcessMap: 'setProcessMap',
   ActionMethod.setState: 'setState',

@@ -1,20 +1,18 @@
 import 'dart:async';
 
-import 'package:dynamic_color/dynamic_color.dart';
 import 'package:fl_clash/clash/clash.dart';
 import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/l10n/l10n.dart';
 import 'package:fl_clash/manager/hotkey_manager.dart';
 import 'package:fl_clash/manager/manager.dart';
 import 'package:fl_clash/plugins/app.dart';
-import 'package:fl_clash/providers/config.dart';
+import 'package:fl_clash/providers/providers.dart';
 import 'package:fl_clash/state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'controller.dart';
-import 'models/models.dart';
 import 'pages/pages.dart';
 
 class Application extends ConsumerStatefulWidget {
@@ -27,7 +25,6 @@ class Application extends ConsumerStatefulWidget {
 }
 
 class ApplicationState extends ConsumerState<Application> {
-  late ColorSchemes systemColorSchemes;
   Timer? _autoUpdateGroupTaskTimer;
   Timer? _autoUpdateProfilesTaskTimer;
 
@@ -43,16 +40,8 @@ class ApplicationState extends ConsumerState<Application> {
   ColorScheme _getAppColorScheme({
     required Brightness brightness,
     int? primaryColor,
-    required ColorSchemes systemColorSchemes,
   }) {
-    if (primaryColor != null) {
-      return ColorScheme.fromSeed(
-        seedColor: Color(primaryColor),
-        brightness: brightness,
-      );
-    } else {
-      return systemColorSchemes.getColorSchemeForBrightness(brightness);
-    }
+    return ref.read(genColorSchemeProvider(brightness));
   }
 
   @override
@@ -140,19 +129,6 @@ class ApplicationState extends ConsumerState<Application> {
     );
   }
 
-  _updateSystemColorSchemes(
-    ColorScheme? lightDynamic,
-    ColorScheme? darkDynamic,
-  ) {
-    systemColorSchemes = ColorSchemes(
-      lightColorScheme: lightDynamic,
-      darkColorScheme: darkDynamic,
-    );
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      globalState.appController.updateSystemColorSchemes(systemColorSchemes);
-    });
-  }
-
   @override
   Widget build(context) {
     return _buildPlatformState(
@@ -162,51 +138,44 @@ class ApplicationState extends ConsumerState<Application> {
             final locale =
                 ref.watch(appSettingProvider.select((state) => state.locale));
             final themeProps = ref.watch(themeSettingProvider);
-            return DynamicColorBuilder(
-              builder: (lightDynamic, darkDynamic) {
-                _updateSystemColorSchemes(lightDynamic, darkDynamic);
-                return MaterialApp(
-                  debugShowCheckedModeBanner: false,
-                  navigatorKey: globalState.navigatorKey,
-                  localizationsDelegates: const [
-                    AppLocalizations.delegate,
-                    GlobalMaterialLocalizations.delegate,
-                    GlobalCupertinoLocalizations.delegate,
-                    GlobalWidgetsLocalizations.delegate
-                  ],
-                  builder: (_, child) {
-                    return AppEnvManager(
-                      child: _buildPlatformApp(
-                        _buildApp(child!),
-                      ),
-                    );
-                  },
-                  scrollBehavior: BaseScrollBehavior(),
-                  title: appName,
-                  locale: other.getLocaleForString(locale),
-                  supportedLocales: AppLocalizations.delegate.supportedLocales,
-                  themeMode: themeProps.themeMode,
-                  theme: ThemeData(
-                    useMaterial3: true,
-                    pageTransitionsTheme: _pageTransitionsTheme,
-                    colorScheme: _getAppColorScheme(
-                      brightness: Brightness.light,
-                      systemColorSchemes: systemColorSchemes,
-                      primaryColor: themeProps.primaryColor,
-                    ),
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              navigatorKey: globalState.navigatorKey,
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate
+              ],
+              builder: (_, child) {
+                return AppEnvManager(
+                  child: _buildPlatformApp(
+                    _buildApp(child!),
                   ),
-                  darkTheme: ThemeData(
-                    useMaterial3: true,
-                    pageTransitionsTheme: _pageTransitionsTheme,
-                    colorScheme: _getAppColorScheme(
-                      brightness: Brightness.dark,
-                      systemColorSchemes: systemColorSchemes,
-                      primaryColor: themeProps.primaryColor,
-                    ).toPureBlack(themeProps.pureBlack),
-                  ),
-                  home: child,
                 );
               },
+              scrollBehavior: BaseScrollBehavior(),
+              title: appName,
+              locale: utils.getLocaleForString(locale),
+              supportedLocales: AppLocalizations.delegate.supportedLocales,
+              themeMode: themeProps.themeMode,
+              theme: ThemeData(
+                useMaterial3: true,
+                pageTransitionsTheme: _pageTransitionsTheme,
+                colorScheme: _getAppColorScheme(
+                  brightness: Brightness.light,
+                  primaryColor: themeProps.primaryColor,
+                ),
+              ),
+              darkTheme: ThemeData(
+                useMaterial3: true,
+                pageTransitionsTheme: _pageTransitionsTheme,
+                colorScheme: _getAppColorScheme(
+                  brightness: Brightness.dark,
+                  primaryColor: themeProps.primaryColor,
+                ).toPureBlack(themeProps.pureBlack),
+              ),
+              home: child,
             );
           },
           child: const HomePage(),

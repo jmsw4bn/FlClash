@@ -7,6 +7,11 @@ import (
 	"time"
 )
 
+type InitParams struct {
+	HomeDir string `json:"home-dir"`
+	Version int    `json:"version"`
+}
+
 type ConfigExtendedParams struct {
 	IsPatch      bool              `json:"is-patch"`
 	IsCompatible bool              `json:"is-compatible"`
@@ -71,16 +76,13 @@ const (
 	stopLogMethod                  Method = "stopLog"
 	startListenerMethod            Method = "startListener"
 	stopListenerMethod             Method = "stopListener"
-	startTunMethod                 Method = "startTun"
-	stopTunMethod                  Method = "stopTun"
 	updateDnsMethod                Method = "updateDns"
-	setProcessMapMethod            Method = "setProcessMap"
-	setFdMapMethod                 Method = "setFdMap"
 	setStateMethod                 Method = "setState"
 	getAndroidVpnOptionsMethod     Method = "getAndroidVpnOptions"
 	getRunTimeMethod               Method = "getRunTime"
 	getCurrentProfileNameMethod    Method = "getCurrentProfileName"
 	getProfileMethod               Method = "getProfile"
+	crashMethod                    Method = "crash"
 )
 
 type Method string
@@ -108,21 +110,4 @@ const (
 func (message *Message) Json() (string, error) {
 	data, err := json.Marshal(message)
 	return string(data), err
-}
-
-type InvokeMessage struct {
-	Type InvokeType  `json:"type"`
-	Data interface{} `json:"data"`
-}
-
-type InvokeType string
-
-const (
-	ProtectInvoke InvokeType = "protect"
-	ProcessInvoke InvokeType = "process"
-)
-
-func (message *InvokeMessage) Json() string {
-	data, _ := json.Marshal(message)
-	return string(data)
 }

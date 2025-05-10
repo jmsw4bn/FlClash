@@ -78,7 +78,7 @@ final coreStateProvider = AutoDisposeProvider<CoreState>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef CoreStateRef = AutoDisposeProviderRef<CoreState>;
-String _$clashConfigStateHash() => r'848f6b2f734d99fb11ec05f73d614be415e9658f';
+String _$clashConfigStateHash() => r'fbbcd7221b0b9b18db523e59c9021e8e56e119ca';
 
 /// See also [clashConfigState].
 @ProviderFor(clashConfigState)
@@ -216,7 +216,7 @@ final startButtonSelectorStateProvider =
 typedef StartButtonSelectorStateRef
     = AutoDisposeProviderRef<StartButtonSelectorState>;
 String _$profilesSelectorStateHash() =>
-    r'9fa4447dace0322e888efb38cbee1dabd33e0e71';
+    r'aac2deee6e747eceaf62cb5f279ec99ce9227a5a';
 
 /// See also [profilesSelectorState].
 @ProviderFor(profilesSelectorState)
@@ -1091,7 +1091,7 @@ final currentProfileProvider = AutoDisposeProvider<Profile?>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef CurrentProfileRef = AutoDisposeProviderRef<Profile?>;
-String _$getProxiesColumnsHash() => r'895705381fe361fa40f16da2f9cb26e8da3293e8';
+String _$getProxiesColumnsHash() => r'725066b5fc21f590a4c2656a1fd5e14ab7079079';
 
 /// See also [getProxiesColumns].
 @ProviderFor(getProxiesColumns)
@@ -1763,6 +1763,185 @@ class _GetProfileOverrideDataProviderElement
 
   @override
   String get profileId => (origin as GetProfileOverrideDataProvider).profileId;
+}
+
+String _$layoutChangeHash() => r'f25182e1dfaf3c70000404d7635bb1e1db09efbb';
+
+/// See also [layoutChange].
+@ProviderFor(layoutChange)
+final layoutChangeProvider = AutoDisposeProvider<VM2?>.internal(
+  layoutChange,
+  name: r'layoutChangeProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$layoutChangeHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef LayoutChangeRef = AutoDisposeProviderRef<VM2?>;
+String _$genColorSchemeHash() => r'b18f15c938a8132ee4ed02cdfc02f3b9f01724e2';
+
+/// See also [genColorScheme].
+@ProviderFor(genColorScheme)
+const genColorSchemeProvider = GenColorSchemeFamily();
+
+/// See also [genColorScheme].
+class GenColorSchemeFamily extends Family<ColorScheme> {
+  /// See also [genColorScheme].
+  const GenColorSchemeFamily();
+
+  /// See also [genColorScheme].
+  GenColorSchemeProvider call(
+    Brightness brightness, {
+    Color? color,
+    bool ignoreConfig = false,
+  }) {
+    return GenColorSchemeProvider(
+      brightness,
+      color: color,
+      ignoreConfig: ignoreConfig,
+    );
+  }
+
+  @override
+  GenColorSchemeProvider getProviderOverride(
+    covariant GenColorSchemeProvider provider,
+  ) {
+    return call(
+      provider.brightness,
+      color: provider.color,
+      ignoreConfig: provider.ignoreConfig,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'genColorSchemeProvider';
+}
+
+/// See also [genColorScheme].
+class GenColorSchemeProvider extends AutoDisposeProvider<ColorScheme> {
+  /// See also [genColorScheme].
+  GenColorSchemeProvider(
+    Brightness brightness, {
+    Color? color,
+    bool ignoreConfig = false,
+  }) : this._internal(
+          (ref) => genColorScheme(
+            ref as GenColorSchemeRef,
+            brightness,
+            color: color,
+            ignoreConfig: ignoreConfig,
+          ),
+          from: genColorSchemeProvider,
+          name: r'genColorSchemeProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$genColorSchemeHash,
+          dependencies: GenColorSchemeFamily._dependencies,
+          allTransitiveDependencies:
+              GenColorSchemeFamily._allTransitiveDependencies,
+          brightness: brightness,
+          color: color,
+          ignoreConfig: ignoreConfig,
+        );
+
+  GenColorSchemeProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.brightness,
+    required this.color,
+    required this.ignoreConfig,
+  }) : super.internal();
+
+  final Brightness brightness;
+  final Color? color;
+  final bool ignoreConfig;
+
+  @override
+  Override overrideWith(
+    ColorScheme Function(GenColorSchemeRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: GenColorSchemeProvider._internal(
+        (ref) => create(ref as GenColorSchemeRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        brightness: brightness,
+        color: color,
+        ignoreConfig: ignoreConfig,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeProviderElement<ColorScheme> createElement() {
+    return _GenColorSchemeProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is GenColorSchemeProvider &&
+        other.brightness == brightness &&
+        other.color == color &&
+        other.ignoreConfig == ignoreConfig;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, brightness.hashCode);
+    hash = _SystemHash.combine(hash, color.hashCode);
+    hash = _SystemHash.combine(hash, ignoreConfig.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin GenColorSchemeRef on AutoDisposeProviderRef<ColorScheme> {
+  /// The parameter `brightness` of this provider.
+  Brightness get brightness;
+
+  /// The parameter `color` of this provider.
+  Color? get color;
+
+  /// The parameter `ignoreConfig` of this provider.
+  bool get ignoreConfig;
+}
+
+class _GenColorSchemeProviderElement
+    extends AutoDisposeProviderElement<ColorScheme> with GenColorSchemeRef {
+  _GenColorSchemeProviderElement(super.provider);
+
+  @override
+  Brightness get brightness => (origin as GenColorSchemeProvider).brightness;
+  @override
+  Color? get color => (origin as GenColorSchemeProvider).color;
+  @override
+  bool get ignoreConfig => (origin as GenColorSchemeProvider).ignoreConfig;
 }
 
 String _$profileOverrideStateHash() =>

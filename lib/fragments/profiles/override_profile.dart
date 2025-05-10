@@ -23,7 +23,6 @@ class OverrideProfile extends StatefulWidget {
 }
 
 class _OverrideProfileState extends State<OverrideProfile> {
-  final GlobalKey<CacheItemExtentListViewState> _ruleListKey = GlobalKey();
   final _controller = ScrollController();
   double _currentMaxWidth = 0;
 
@@ -45,6 +44,7 @@ class _OverrideProfileState extends State<OverrideProfile> {
   }
 
   _handleSave(WidgetRef ref, OverrideData overrideData) {
+    ref.read(needApplyProvider.notifier).value = true;
     ref.read(profilesProvider.notifier).updateProfile(
           widget.profileId,
           (state) => state.copyWith(
@@ -85,13 +85,6 @@ class _OverrideProfileState extends State<OverrideProfile> {
         );
   }
 
-  _handleTryClearCache(double maxWidth) {
-    if (_currentMaxWidth != maxWidth) {
-      _currentMaxWidth = maxWidth;
-      _ruleListKey.currentState?.clearCache();
-    }
-  }
-
   _buildContent() {
     return Consumer(
       builder: (_, ref, child) {
@@ -115,7 +108,7 @@ class _OverrideProfileState extends State<OverrideProfile> {
       },
       child: LayoutBuilder(
         builder: (_, constraints) {
-          _handleTryClearCache(constraints.maxWidth - 104);
+          _currentMaxWidth = constraints.maxWidth - 104;
           return CommonAutoHiddenScrollBar(
             controller: _controller,
             child: CustomScrollView(
@@ -147,7 +140,6 @@ class _OverrideProfileState extends State<OverrideProfile> {
                   padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 0),
                   sliver: RuleContent(
                     maxWidth: _currentMaxWidth,
-                    ruleListKey: _ruleListKey,
                   ),
                 ),
                 SliverToBoxAdapter(
@@ -227,7 +219,7 @@ class _OverrideProfileState extends State<OverrideProfile> {
                               message: TextSpan(
                                 text: appLocalizations.saveTip,
                               ),
-                              confirmText: appLocalizations.tip,
+                              confirmText: appLocalizations.save,
                             );
                             if (res != true) {
                               return;
@@ -448,12 +440,10 @@ class RuleTitle extends ConsumerWidget {
 }
 
 class RuleContent extends ConsumerWidget {
-  final Key ruleListKey;
   final double maxWidth;
 
   const RuleContent({
     super.key,
-    required this.ruleListKey,
     required this.maxWidth,
   });
 
@@ -601,7 +591,7 @@ class RuleContent extends ConsumerWidget {
       );
     }
     return CacheItemExtentSliverReorderableList(
-      key: ruleListKey,
+      tag: CacheTag.rules,
       itemBuilder: (context, index) {
         final rule = rules[index];
         return GestureDetector(
@@ -872,6 +862,8 @@ class _AddRuleDialogState extends State<AddRuleDialog> {
                           builder: (filed) {
                             return DropdownMenu(
                               width: 200,
+                              enableFilter: false,
+                              enableSearch: false,
                               controller: _subRuleController,
                               label: Text(appLocalizations.subRule),
                               menuHeight: 250,
@@ -889,11 +881,11 @@ class _AddRuleDialogState extends State<AddRuleDialog> {
                           builder: (filed) {
                             return DropdownMenu(
                               controller: _ruleTargetController,
-                              initialSelection: filed.value,
                               label: Text(appLocalizations.ruleTarget),
                               width: 200,
                               menuHeight: 250,
-                              enableFilter: true,
+                              enableFilter: false,
+                              enableSearch: false,
                               dropdownMenuEntries: _targetItems,
                               errorText: filed.errorText,
                             );

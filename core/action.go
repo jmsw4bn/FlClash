@@ -35,8 +35,8 @@ func (action Action) getResult(data interface{}) []byte {
 func handleAction(action *Action, result func(data interface{})) {
 	switch action.Method {
 	case initClashMethod:
-		data := action.Data.(string)
-		result(handleInitClash(data))
+		paramsString := action.Data.(string)
+		result(handleInitClash(paramsString))
 		return
 	case getIsInitMethod:
 		result(handleGetIsInit())
@@ -166,6 +166,9 @@ func handleAction(action *Action, result func(data interface{})) {
 		data := action.Data.(string)
 		handleSetState(data)
 		result(true)
+	case crashMethod:
+		result(true)
+		handleCrash()
 	default:
 		handle := nextHandle(action, result)
 		if handle {

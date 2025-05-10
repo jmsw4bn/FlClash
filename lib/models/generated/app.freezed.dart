@@ -19,7 +19,6 @@ mixin _$AppState {
   bool get isInit => throw _privateConstructorUsedError;
   PageLabel get pageLabel => throw _privateConstructorUsedError;
   List<Package> get packages => throw _privateConstructorUsedError;
-  ColorSchemes get colorSchemes => throw _privateConstructorUsedError;
   int get sortNum => throw _privateConstructorUsedError;
   Size get viewSize => throw _privateConstructorUsedError;
   Map<String, Map<String, int?>> get delayMap =>
@@ -35,6 +34,7 @@ mixin _$AppState {
   FixedList<Log> get logs => throw _privateConstructorUsedError;
   FixedList<Traffic> get traffics => throw _privateConstructorUsedError;
   Traffic get totalTraffic => throw _privateConstructorUsedError;
+  bool get needApply => throw _privateConstructorUsedError;
 
   /// Create a copy of AppState
   /// with the given fields replaced by the non-null parameter values.
@@ -52,7 +52,6 @@ abstract class $AppStateCopyWith<$Res> {
       {bool isInit,
       PageLabel pageLabel,
       List<Package> packages,
-      ColorSchemes colorSchemes,
       int sortNum,
       Size viewSize,
       Map<String, Map<String, int?>> delayMap,
@@ -66,9 +65,8 @@ abstract class $AppStateCopyWith<$Res> {
       int version,
       FixedList<Log> logs,
       FixedList<Traffic> traffics,
-      Traffic totalTraffic});
-
-  $ColorSchemesCopyWith<$Res> get colorSchemes;
+      Traffic totalTraffic,
+      bool needApply});
 }
 
 /// @nodoc
@@ -89,7 +87,6 @@ class _$AppStateCopyWithImpl<$Res, $Val extends AppState>
     Object? isInit = null,
     Object? pageLabel = null,
     Object? packages = null,
-    Object? colorSchemes = null,
     Object? sortNum = null,
     Object? viewSize = null,
     Object? delayMap = null,
@@ -104,6 +101,7 @@ class _$AppStateCopyWithImpl<$Res, $Val extends AppState>
     Object? logs = null,
     Object? traffics = null,
     Object? totalTraffic = null,
+    Object? needApply = null,
   }) {
     return _then(_value.copyWith(
       isInit: null == isInit
@@ -118,10 +116,6 @@ class _$AppStateCopyWithImpl<$Res, $Val extends AppState>
           ? _value.packages
           : packages // ignore: cast_nullable_to_non_nullable
               as List<Package>,
-      colorSchemes: null == colorSchemes
-          ? _value.colorSchemes
-          : colorSchemes // ignore: cast_nullable_to_non_nullable
-              as ColorSchemes,
       sortNum: null == sortNum
           ? _value.sortNum
           : sortNum // ignore: cast_nullable_to_non_nullable
@@ -178,17 +172,11 @@ class _$AppStateCopyWithImpl<$Res, $Val extends AppState>
           ? _value.totalTraffic
           : totalTraffic // ignore: cast_nullable_to_non_nullable
               as Traffic,
+      needApply: null == needApply
+          ? _value.needApply
+          : needApply // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
-  }
-
-  /// Create a copy of AppState
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $ColorSchemesCopyWith<$Res> get colorSchemes {
-    return $ColorSchemesCopyWith<$Res>(_value.colorSchemes, (value) {
-      return _then(_value.copyWith(colorSchemes: value) as $Val);
-    });
   }
 }
 
@@ -204,7 +192,6 @@ abstract class _$$AppStateImplCopyWith<$Res>
       {bool isInit,
       PageLabel pageLabel,
       List<Package> packages,
-      ColorSchemes colorSchemes,
       int sortNum,
       Size viewSize,
       Map<String, Map<String, int?>> delayMap,
@@ -218,10 +205,8 @@ abstract class _$$AppStateImplCopyWith<$Res>
       int version,
       FixedList<Log> logs,
       FixedList<Traffic> traffics,
-      Traffic totalTraffic});
-
-  @override
-  $ColorSchemesCopyWith<$Res> get colorSchemes;
+      Traffic totalTraffic,
+      bool needApply});
 }
 
 /// @nodoc
@@ -240,7 +225,6 @@ class __$$AppStateImplCopyWithImpl<$Res>
     Object? isInit = null,
     Object? pageLabel = null,
     Object? packages = null,
-    Object? colorSchemes = null,
     Object? sortNum = null,
     Object? viewSize = null,
     Object? delayMap = null,
@@ -255,6 +239,7 @@ class __$$AppStateImplCopyWithImpl<$Res>
     Object? logs = null,
     Object? traffics = null,
     Object? totalTraffic = null,
+    Object? needApply = null,
   }) {
     return _then(_$AppStateImpl(
       isInit: null == isInit
@@ -269,10 +254,6 @@ class __$$AppStateImplCopyWithImpl<$Res>
           ? _value._packages
           : packages // ignore: cast_nullable_to_non_nullable
               as List<Package>,
-      colorSchemes: null == colorSchemes
-          ? _value.colorSchemes
-          : colorSchemes // ignore: cast_nullable_to_non_nullable
-              as ColorSchemes,
       sortNum: null == sortNum
           ? _value.sortNum
           : sortNum // ignore: cast_nullable_to_non_nullable
@@ -329,6 +310,10 @@ class __$$AppStateImplCopyWithImpl<$Res>
           ? _value.totalTraffic
           : totalTraffic // ignore: cast_nullable_to_non_nullable
               as Traffic,
+      needApply: null == needApply
+          ? _value.needApply
+          : needApply // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -340,7 +325,6 @@ class _$AppStateImpl implements _AppState {
       {this.isInit = false,
       this.pageLabel = PageLabel.dashboard,
       final List<Package> packages = const [],
-      this.colorSchemes = const ColorSchemes(),
       this.sortNum = 0,
       required this.viewSize,
       final Map<String, Map<String, int?>> delayMap = const {},
@@ -354,7 +338,8 @@ class _$AppStateImpl implements _AppState {
       required this.version,
       required this.logs,
       required this.traffics,
-      required this.totalTraffic})
+      required this.totalTraffic,
+      this.needApply = false})
       : _packages = packages,
         _delayMap = delayMap,
         _groups = groups,
@@ -375,9 +360,6 @@ class _$AppStateImpl implements _AppState {
     return EqualUnmodifiableListView(_packages);
   }
 
-  @override
-  @JsonKey()
-  final ColorSchemes colorSchemes;
   @override
   @JsonKey()
   final int sortNum;
@@ -429,10 +411,13 @@ class _$AppStateImpl implements _AppState {
   final FixedList<Traffic> traffics;
   @override
   final Traffic totalTraffic;
+  @override
+  @JsonKey()
+  final bool needApply;
 
   @override
   String toString() {
-    return 'AppState(isInit: $isInit, pageLabel: $pageLabel, packages: $packages, colorSchemes: $colorSchemes, sortNum: $sortNum, viewSize: $viewSize, delayMap: $delayMap, groups: $groups, checkIpNum: $checkIpNum, brightness: $brightness, runTime: $runTime, providers: $providers, localIp: $localIp, requests: $requests, version: $version, logs: $logs, traffics: $traffics, totalTraffic: $totalTraffic)';
+    return 'AppState(isInit: $isInit, pageLabel: $pageLabel, packages: $packages, sortNum: $sortNum, viewSize: $viewSize, delayMap: $delayMap, groups: $groups, checkIpNum: $checkIpNum, brightness: $brightness, runTime: $runTime, providers: $providers, localIp: $localIp, requests: $requests, version: $version, logs: $logs, traffics: $traffics, totalTraffic: $totalTraffic, needApply: $needApply)';
   }
 
   @override
@@ -444,8 +429,6 @@ class _$AppStateImpl implements _AppState {
             (identical(other.pageLabel, pageLabel) ||
                 other.pageLabel == pageLabel) &&
             const DeepCollectionEquality().equals(other._packages, _packages) &&
-            (identical(other.colorSchemes, colorSchemes) ||
-                other.colorSchemes == colorSchemes) &&
             (identical(other.sortNum, sortNum) || other.sortNum == sortNum) &&
             (identical(other.viewSize, viewSize) ||
                 other.viewSize == viewSize) &&
@@ -466,7 +449,9 @@ class _$AppStateImpl implements _AppState {
             (identical(other.traffics, traffics) ||
                 other.traffics == traffics) &&
             (identical(other.totalTraffic, totalTraffic) ||
-                other.totalTraffic == totalTraffic));
+                other.totalTraffic == totalTraffic) &&
+            (identical(other.needApply, needApply) ||
+                other.needApply == needApply));
   }
 
   @override
@@ -475,7 +460,6 @@ class _$AppStateImpl implements _AppState {
       isInit,
       pageLabel,
       const DeepCollectionEquality().hash(_packages),
-      colorSchemes,
       sortNum,
       viewSize,
       const DeepCollectionEquality().hash(_delayMap),
@@ -489,7 +473,8 @@ class _$AppStateImpl implements _AppState {
       version,
       logs,
       traffics,
-      totalTraffic);
+      totalTraffic,
+      needApply);
 
   /// Create a copy of AppState
   /// with the given fields replaced by the non-null parameter values.
@@ -505,7 +490,6 @@ abstract class _AppState implements AppState {
       {final bool isInit,
       final PageLabel pageLabel,
       final List<Package> packages,
-      final ColorSchemes colorSchemes,
       final int sortNum,
       required final Size viewSize,
       final Map<String, Map<String, int?>> delayMap,
@@ -519,7 +503,8 @@ abstract class _AppState implements AppState {
       required final int version,
       required final FixedList<Log> logs,
       required final FixedList<Traffic> traffics,
-      required final Traffic totalTraffic}) = _$AppStateImpl;
+      required final Traffic totalTraffic,
+      final bool needApply}) = _$AppStateImpl;
 
   @override
   bool get isInit;
@@ -527,8 +512,6 @@ abstract class _AppState implements AppState {
   PageLabel get pageLabel;
   @override
   List<Package> get packages;
-  @override
-  ColorSchemes get colorSchemes;
   @override
   int get sortNum;
   @override
@@ -557,6 +540,8 @@ abstract class _AppState implements AppState {
   FixedList<Traffic> get traffics;
   @override
   Traffic get totalTraffic;
+  @override
+  bool get needApply;
 
   /// Create a copy of AppState
   /// with the given fields replaced by the non-null parameter values.

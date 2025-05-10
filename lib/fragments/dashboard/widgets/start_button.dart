@@ -1,5 +1,5 @@
 import 'package:fl_clash/common/common.dart';
-import 'package:fl_clash/models/models.dart';
+import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/providers/providers.dart';
 import 'package:fl_clash/state.dart';
 import 'package:flutter/material.dart';
@@ -35,11 +35,15 @@ class _StartButtonState extends State<StartButton>
   }
 
   handleSwitchStart() {
-    if (isStart == globalState.appState.isStart) {
-      isStart = !isStart;
-      updateController();
-      globalState.appController.updateStatus(isStart);
-    }
+    isStart = !isStart;
+    updateController();
+    debouncer.call(
+      DebounceTag.updateStatus,
+      () {
+        globalState.appController.updateStatus(isStart);
+      },
+      duration: moreDuration,
+    );
   }
 
   updateController() {
@@ -71,10 +75,10 @@ class _StartButtonState extends State<StartButton>
         final textWidth = globalState.measure
                 .computeTextSize(
                   Text(
-                    other.getTimeDifference(
+                    utils.getTimeDifference(
                       DateTime.now(),
                     ),
-                    style: Theme.of(context).textTheme.titleMedium?.toSoftBold,
+                    style: context.textTheme.titleMedium?.toSoftBold,
                   ),
                 )
                 .width +
@@ -123,10 +127,14 @@ class _StartButtonState extends State<StartButton>
       child: Consumer(
         builder: (_, ref, __) {
           final runTime = ref.watch(runTimeProvider);
-          final text = other.getTimeText(runTime);
+          final text = utils.getTimeText(runTime);
           return Text(
             text,
-            style: Theme.of(context).textTheme.titleMedium?.toSoftBold,
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium
+                ?.toSoftBold
+                .copyWith(color: context.colorScheme.onPrimaryContainer),
           );
         },
       ),

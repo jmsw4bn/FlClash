@@ -660,6 +660,8 @@ Tun _$TunFromJson(Map<String, dynamic> json) {
 mixin _$Tun {
   bool get enable => throw _privateConstructorUsedError;
   String get device => throw _privateConstructorUsedError;
+  @JsonKey(name: "auto-route")
+  bool get autoRoute => throw _privateConstructorUsedError;
   TunStack get stack => throw _privateConstructorUsedError;
   @JsonKey(name: "dns-hijack")
   List<String> get dnsHijack => throw _privateConstructorUsedError;
@@ -683,6 +685,7 @@ abstract class $TunCopyWith<$Res> {
   $Res call(
       {bool enable,
       String device,
+      @JsonKey(name: "auto-route") bool autoRoute,
       TunStack stack,
       @JsonKey(name: "dns-hijack") List<String> dnsHijack,
       @JsonKey(name: "route-address") List<String> routeAddress});
@@ -704,6 +707,7 @@ class _$TunCopyWithImpl<$Res, $Val extends Tun> implements $TunCopyWith<$Res> {
   $Res call({
     Object? enable = null,
     Object? device = null,
+    Object? autoRoute = null,
     Object? stack = null,
     Object? dnsHijack = null,
     Object? routeAddress = null,
@@ -717,6 +721,10 @@ class _$TunCopyWithImpl<$Res, $Val extends Tun> implements $TunCopyWith<$Res> {
           ? _value.device
           : device // ignore: cast_nullable_to_non_nullable
               as String,
+      autoRoute: null == autoRoute
+          ? _value.autoRoute
+          : autoRoute // ignore: cast_nullable_to_non_nullable
+              as bool,
       stack: null == stack
           ? _value.stack
           : stack // ignore: cast_nullable_to_non_nullable
@@ -742,6 +750,7 @@ abstract class _$$TunImplCopyWith<$Res> implements $TunCopyWith<$Res> {
   $Res call(
       {bool enable,
       String device,
+      @JsonKey(name: "auto-route") bool autoRoute,
       TunStack stack,
       @JsonKey(name: "dns-hijack") List<String> dnsHijack,
       @JsonKey(name: "route-address") List<String> routeAddress});
@@ -760,6 +769,7 @@ class __$$TunImplCopyWithImpl<$Res> extends _$TunCopyWithImpl<$Res, _$TunImpl>
   $Res call({
     Object? enable = null,
     Object? device = null,
+    Object? autoRoute = null,
     Object? stack = null,
     Object? dnsHijack = null,
     Object? routeAddress = null,
@@ -773,6 +783,10 @@ class __$$TunImplCopyWithImpl<$Res> extends _$TunCopyWithImpl<$Res, _$TunImpl>
           ? _value.device
           : device // ignore: cast_nullable_to_non_nullable
               as String,
+      autoRoute: null == autoRoute
+          ? _value.autoRoute
+          : autoRoute // ignore: cast_nullable_to_non_nullable
+              as bool,
       stack: null == stack
           ? _value.stack
           : stack // ignore: cast_nullable_to_non_nullable
@@ -795,7 +809,8 @@ class _$TunImpl implements _Tun {
   const _$TunImpl(
       {this.enable = false,
       this.device = appName,
-      this.stack = TunStack.gvisor,
+      @JsonKey(name: "auto-route") this.autoRoute = false,
+      this.stack = TunStack.mixed,
       @JsonKey(name: "dns-hijack")
       final List<String> dnsHijack = const ["any:53"],
       @JsonKey(name: "route-address")
@@ -812,6 +827,9 @@ class _$TunImpl implements _Tun {
   @override
   @JsonKey()
   final String device;
+  @override
+  @JsonKey(name: "auto-route")
+  final bool autoRoute;
   @override
   @JsonKey()
   final TunStack stack;
@@ -835,7 +853,7 @@ class _$TunImpl implements _Tun {
 
   @override
   String toString() {
-    return 'Tun(enable: $enable, device: $device, stack: $stack, dnsHijack: $dnsHijack, routeAddress: $routeAddress)';
+    return 'Tun(enable: $enable, device: $device, autoRoute: $autoRoute, stack: $stack, dnsHijack: $dnsHijack, routeAddress: $routeAddress)';
   }
 
   @override
@@ -845,6 +863,8 @@ class _$TunImpl implements _Tun {
             other is _$TunImpl &&
             (identical(other.enable, enable) || other.enable == enable) &&
             (identical(other.device, device) || other.device == device) &&
+            (identical(other.autoRoute, autoRoute) ||
+                other.autoRoute == autoRoute) &&
             (identical(other.stack, stack) || other.stack == stack) &&
             const DeepCollectionEquality()
                 .equals(other._dnsHijack, _dnsHijack) &&
@@ -858,6 +878,7 @@ class _$TunImpl implements _Tun {
       runtimeType,
       enable,
       device,
+      autoRoute,
       stack,
       const DeepCollectionEquality().hash(_dnsHijack),
       const DeepCollectionEquality().hash(_routeAddress));
@@ -882,6 +903,7 @@ abstract class _Tun implements Tun {
   const factory _Tun(
           {final bool enable,
           final String device,
+          @JsonKey(name: "auto-route") final bool autoRoute,
           final TunStack stack,
           @JsonKey(name: "dns-hijack") final List<String> dnsHijack,
           @JsonKey(name: "route-address") final List<String> routeAddress}) =
@@ -893,6 +915,9 @@ abstract class _Tun implements Tun {
   bool get enable;
   @override
   String get device;
+  @override
+  @JsonKey(name: "auto-route")
+  bool get autoRoute;
   @override
   TunStack get stack;
   @override
@@ -2832,7 +2857,7 @@ mixin _$ClashConfig {
   @JsonKey(name: "log-level")
   LogLevel get logLevel => throw _privateConstructorUsedError;
   bool get ipv6 => throw _privateConstructorUsedError;
-  @JsonKey(name: "find-process-mode", unknownEnumValue: FindProcessMode.off)
+  @JsonKey(name: "find-process-mode", unknownEnumValue: FindProcessMode.always)
   FindProcessMode get findProcessMode => throw _privateConstructorUsedError;
   @JsonKey(name: "keep-alive-interval")
   int get keepAliveInterval => throw _privateConstructorUsedError;
@@ -2880,7 +2905,8 @@ abstract class $ClashConfigCopyWith<$Res> {
       @JsonKey(name: "allow-lan") bool allowLan,
       @JsonKey(name: "log-level") LogLevel logLevel,
       bool ipv6,
-      @JsonKey(name: "find-process-mode", unknownEnumValue: FindProcessMode.off)
+      @JsonKey(
+          name: "find-process-mode", unknownEnumValue: FindProcessMode.always)
       FindProcessMode findProcessMode,
       @JsonKey(name: "keep-alive-interval") int keepAliveInterval,
       @JsonKey(name: "unified-delay") bool unifiedDelay,
@@ -3057,7 +3083,8 @@ abstract class _$$ClashConfigImplCopyWith<$Res>
       @JsonKey(name: "allow-lan") bool allowLan,
       @JsonKey(name: "log-level") LogLevel logLevel,
       bool ipv6,
-      @JsonKey(name: "find-process-mode", unknownEnumValue: FindProcessMode.off)
+      @JsonKey(
+          name: "find-process-mode", unknownEnumValue: FindProcessMode.always)
       FindProcessMode findProcessMode,
       @JsonKey(name: "keep-alive-interval") int keepAliveInterval,
       @JsonKey(name: "unified-delay") bool unifiedDelay,
@@ -3198,9 +3225,10 @@ class _$ClashConfigImpl implements _ClashConfig {
       {@JsonKey(name: "mixed-port") this.mixedPort = defaultMixedPort,
       this.mode = Mode.rule,
       @JsonKey(name: "allow-lan") this.allowLan = false,
-      @JsonKey(name: "log-level") this.logLevel = LogLevel.info,
+      @JsonKey(name: "log-level") this.logLevel = LogLevel.error,
       this.ipv6 = false,
-      @JsonKey(name: "find-process-mode", unknownEnumValue: FindProcessMode.off)
+      @JsonKey(
+          name: "find-process-mode", unknownEnumValue: FindProcessMode.always)
       this.findProcessMode = FindProcessMode.off,
       @JsonKey(name: "keep-alive-interval")
       this.keepAliveInterval = defaultKeepAliveInterval,
@@ -3242,7 +3270,7 @@ class _$ClashConfigImpl implements _ClashConfig {
   @JsonKey()
   final bool ipv6;
   @override
-  @JsonKey(name: "find-process-mode", unknownEnumValue: FindProcessMode.off)
+  @JsonKey(name: "find-process-mode", unknownEnumValue: FindProcessMode.always)
   final FindProcessMode findProcessMode;
   @override
   @JsonKey(name: "keep-alive-interval")
@@ -3385,7 +3413,8 @@ abstract class _ClashConfig implements ClashConfig {
       @JsonKey(name: "allow-lan") final bool allowLan,
       @JsonKey(name: "log-level") final LogLevel logLevel,
       final bool ipv6,
-      @JsonKey(name: "find-process-mode", unknownEnumValue: FindProcessMode.off)
+      @JsonKey(
+          name: "find-process-mode", unknownEnumValue: FindProcessMode.always)
       final FindProcessMode findProcessMode,
       @JsonKey(name: "keep-alive-interval") final int keepAliveInterval,
       @JsonKey(name: "unified-delay") final bool unifiedDelay,
@@ -3419,7 +3448,7 @@ abstract class _ClashConfig implements ClashConfig {
   @override
   bool get ipv6;
   @override
-  @JsonKey(name: "find-process-mode", unknownEnumValue: FindProcessMode.off)
+  @JsonKey(name: "find-process-mode", unknownEnumValue: FindProcessMode.always)
   FindProcessMode get findProcessMode;
   @override
   @JsonKey(name: "keep-alive-interval")

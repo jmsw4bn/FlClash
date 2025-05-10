@@ -34,9 +34,15 @@ var (
 	currentConfig     *config.Config
 )
 
-func handleInitClash(homeDirStr string) bool {
+func handleInitClash(paramsString string) bool {
+	var params = InitParams{}
+	err := json.Unmarshal([]byte(paramsString), &params)
+	if err != nil {
+		return false
+	}
+	version = params.Version
 	if !isInit {
-		constant.SetHomeDir(homeDirStr)
+		constant.SetHomeDir(params.HomeDir)
 		isInit = true
 	}
 	return isInit
@@ -434,6 +440,10 @@ func handleGetMemory(fn func(value string)) {
 
 func handleSetState(params string) {
 	_ = json.Unmarshal([]byte(params), state.CurrentState)
+}
+
+func handleCrash() {
+	panic("handle invoke crash")
 }
 
 func init() {

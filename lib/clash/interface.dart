@@ -7,7 +7,7 @@ import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/models/models.dart';
 
 mixin ClashInterface {
-  Future<bool> init(String homeDir);
+  Future<bool> init(InitParams params);
 
   Future<bool> preload();
 
@@ -58,6 +58,8 @@ mixin ClashInterface {
 
   stopLog();
 
+  Future<bool> crash();
+
   FutureOr<String> getConnections();
 
   FutureOr<bool> closeConnection(String id);
@@ -74,11 +76,9 @@ mixin AndroidClashInterface {
 
   Future<bool> setProcessMap(ProcessMapItem item);
 
-  Future<bool> stopTun();
+  // Future<bool> stopTun();
 
   Future<bool> updateDns(String value);
-
-  Future<DateTime?> startTun(int fd);
 
   Future<AndroidVpnOptions?> getAndroidVpnOptions();
 
@@ -106,6 +106,7 @@ abstract class ClashHandlerInterface with ClashInterface {
         case ActionMethod.closeConnection:
         case ActionMethod.stopListener:
         case ActionMethod.setState:
+        case ActionMethod.crash:
           completer?.complete(result.data as bool);
           return;
         case ActionMethod.changeProxy:
@@ -153,7 +154,7 @@ abstract class ClashHandlerInterface with ClashInterface {
     Duration? timeout,
     FutureOr<T> Function()? onTimeout,
   }) async {
-    final id = "${method.name}#${other.id}";
+    final id = "${method.name}#${utils.id}";
 
     callbackCompleterMap[id] = Completer<T>();
 
@@ -191,10 +192,10 @@ abstract class ClashHandlerInterface with ClashInterface {
   }
 
   @override
-  Future<bool> init(String homeDir) {
+  Future<bool> init(InitParams params) {
     return invoke<bool>(
       method: ActionMethod.initClash,
-      data: homeDir,
+      data: json.encode(params),
     );
   }
 
@@ -241,6 +242,13 @@ abstract class ClashHandlerInterface with ClashInterface {
       method: ActionMethod.updateConfig,
       data: json.encode(updateConfigParams),
       timeout: Duration(minutes: 2),
+    );
+  }
+
+  @override
+  Future<bool> crash() {
+    return invoke<bool>(
+      method: ActionMethod.crash,
     );
   }
 

@@ -16,7 +16,6 @@ class AppState with _$AppState {
     @Default(false) bool isInit,
     @Default(PageLabel.dashboard) PageLabel pageLabel,
     @Default([]) List<Package> packages,
-    @Default(ColorSchemes()) ColorSchemes colorSchemes,
     @Default(0) int sortNum,
     required Size viewSize,
     @Default({}) DelayMap delayMap,
@@ -31,11 +30,12 @@ class AppState with _$AppState {
     required FixedList<Log> logs,
     required FixedList<Traffic> traffics,
     required Traffic totalTraffic,
+    @Default(false) bool needApply,
   }) = _AppState;
 }
 
 extension AppStateExt on AppState {
-  ViewMode get viewMode => other.getViewMode(viewSize.width);
+  ViewMode get viewMode => utils.getViewMode(viewSize.width);
 
   bool get isStart => runTime != null;
 }

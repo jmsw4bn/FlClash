@@ -66,8 +66,9 @@ Map<String, dynamic> _$$RuleProviderImplToJson(_$RuleProviderImpl instance) =>
 _$TunImpl _$$TunImplFromJson(Map<String, dynamic> json) => _$TunImpl(
       enable: json['enable'] as bool? ?? false,
       device: json['device'] as String? ?? appName,
+      autoRoute: json['auto-route'] as bool? ?? false,
       stack: $enumDecodeNullable(_$TunStackEnumMap, json['stack']) ??
-          TunStack.gvisor,
+          TunStack.mixed,
       dnsHijack: (json['dns-hijack'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
@@ -81,6 +82,7 @@ _$TunImpl _$$TunImplFromJson(Map<String, dynamic> json) => _$TunImpl(
 Map<String, dynamic> _$$TunImplToJson(_$TunImpl instance) => <String, dynamic>{
       'enable': instance.enable,
       'device': instance.device,
+      'auto-route': instance.autoRoute,
       'stack': _$TunStackEnumMap[instance.stack]!,
       'dns-hijack': instance.dnsHijack,
       'route-address': instance.routeAddress,
@@ -268,11 +270,11 @@ _$ClashConfigImpl _$$ClashConfigImplFromJson(Map<String, dynamic> json) =>
       mode: $enumDecodeNullable(_$ModeEnumMap, json['mode']) ?? Mode.rule,
       allowLan: json['allow-lan'] as bool? ?? false,
       logLevel: $enumDecodeNullable(_$LogLevelEnumMap, json['log-level']) ??
-          LogLevel.info,
+          LogLevel.error,
       ipv6: json['ipv6'] as bool? ?? false,
       findProcessMode: $enumDecodeNullable(
               _$FindProcessModeEnumMap, json['find-process-mode'],
-              unknownValue: FindProcessMode.off) ??
+              unknownValue: FindProcessMode.always) ??
           FindProcessMode.off,
       keepAliveInterval: (json['keep-alive-interval'] as num?)?.toInt() ??
           defaultKeepAliveInterval,
@@ -342,6 +344,7 @@ const _$LogLevelEnumMap = {
   LogLevel.warning: 'warning',
   LogLevel.error: 'error',
   LogLevel.silent: 'silent',
+  LogLevel.app: 'app',
 };
 
 const _$FindProcessModeEnumMap = {

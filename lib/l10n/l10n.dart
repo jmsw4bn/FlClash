@@ -2904,6 +2904,221 @@ class AppLocalizations {
       args: [],
     );
   }
+
+  /// `Are you sure you want to delete the current color?`
+  String get deleteColorTip {
+    return Intl.message(
+      'Are you sure you want to delete the current color?',
+      name: 'deleteColorTip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Current color already exists`
+  String get colorExists {
+    return Intl.message(
+      'Current color already exists',
+      name: 'colorExists',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Color schemes`
+  String get colorSchemes {
+    return Intl.message(
+      'Color schemes',
+      name: 'colorSchemes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Palette`
+  String get palette {
+    return Intl.message('Palette', name: 'palette', desc: '', args: []);
+  }
+
+  /// `TonalSpot`
+  String get tonalSpotScheme {
+    return Intl.message(
+      'TonalSpot',
+      name: 'tonalSpotScheme',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fidelity`
+  String get fidelityScheme {
+    return Intl.message('Fidelity', name: 'fidelityScheme', desc: '', args: []);
+  }
+
+  /// `Monochrome`
+  String get monochromeScheme {
+    return Intl.message(
+      'Monochrome',
+      name: 'monochromeScheme',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Neutral`
+  String get neutralScheme {
+    return Intl.message('Neutral', name: 'neutralScheme', desc: '', args: []);
+  }
+
+  /// `Vibrant`
+  String get vibrantScheme {
+    return Intl.message('Vibrant', name: 'vibrantScheme', desc: '', args: []);
+  }
+
+  /// `Expressive`
+  String get expressiveScheme {
+    return Intl.message(
+      'Expressive',
+      name: 'expressiveScheme',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Content`
+  String get contentScheme {
+    return Intl.message('Content', name: 'contentScheme', desc: '', args: []);
+  }
+
+  /// `Rainbow`
+  String get rainbowScheme {
+    return Intl.message('Rainbow', name: 'rainbowScheme', desc: '', args: []);
+  }
+
+  /// `FruitSalad`
+  String get fruitSaladScheme {
+    return Intl.message(
+      'FruitSalad',
+      name: 'fruitSaladScheme',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Developer mode`
+  String get developerMode {
+    return Intl.message(
+      'Developer mode',
+      name: 'developerMode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Developer mode is enabled.`
+  String get developerModeEnableTip {
+    return Intl.message(
+      'Developer mode is enabled.',
+      name: 'developerModeEnableTip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Message test`
+  String get messageTest {
+    return Intl.message(
+      'Message test',
+      name: 'messageTest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This is a message.`
+  String get messageTestTip {
+    return Intl.message(
+      'This is a message.',
+      name: 'messageTestTip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Crash test`
+  String get crashTest {
+    return Intl.message('Crash test', name: 'crashTest', desc: '', args: []);
+  }
+
+  /// `Clear Data`
+  String get clearData {
+    return Intl.message('Clear Data', name: 'clearData', desc: '', args: []);
+  }
+
+  /// `Text Scaling`
+  String get textScale {
+    return Intl.message('Text Scaling', name: 'textScale', desc: '', args: []);
+  }
+
+  /// `Internet`
+  String get internet {
+    return Intl.message('Internet', name: 'internet', desc: '', args: []);
+  }
+
+  /// `System APP`
+  String get systemApp {
+    return Intl.message('System APP', name: 'systemApp', desc: '', args: []);
+  }
+
+  /// `No network APP`
+  String get noNetworkApp {
+    return Intl.message(
+      'No network APP',
+      name: 'noNetworkApp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Contact me`
+  String get contactMe {
+    return Intl.message('Contact me', name: 'contactMe', desc: '', args: []);
+  }
+
+  /// `Recovery strategy`
+  String get recoveryStrategy {
+    return Intl.message(
+      'Recovery strategy',
+      name: 'recoveryStrategy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Override`
+  String get recoveryStrategy_override {
+    return Intl.message(
+      'Override',
+      name: 'recoveryStrategy_override',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Compatible`
+  String get recoveryStrategy_compatible {
+    return Intl.message(
+      'Compatible',
+      name: 'recoveryStrategy_compatible',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Logs test`
+  String get logsTest {
+    return Intl.message('Logs test', name: 'logsTest', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

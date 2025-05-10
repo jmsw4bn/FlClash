@@ -146,8 +146,13 @@ class MessageLookup extends MessageLookupByLibrary {
       "The current application is already the latest version",
     ),
     "checking": MessageLookupByLibrary.simpleMessage("Checking..."),
+    "clearData": MessageLookupByLibrary.simpleMessage("Clear Data"),
     "clipboardExport": MessageLookupByLibrary.simpleMessage("Export clipboard"),
     "clipboardImport": MessageLookupByLibrary.simpleMessage("Clipboard import"),
+    "colorExists": MessageLookupByLibrary.simpleMessage(
+      "Current color already exists",
+    ),
+    "colorSchemes": MessageLookupByLibrary.simpleMessage("Color schemes"),
     "columns": MessageLookupByLibrary.simpleMessage("Columns"),
     "compatible": MessageLookupByLibrary.simpleMessage("Compatibility mode"),
     "compatibleDesc": MessageLookupByLibrary.simpleMessage(
@@ -159,10 +164,12 @@ class MessageLookup extends MessageLookupByLibrary {
       "View current connections data",
     ),
     "connectivity": MessageLookupByLibrary.simpleMessage("Connectivity："),
+    "contactMe": MessageLookupByLibrary.simpleMessage("Contact me"),
     "content": MessageLookupByLibrary.simpleMessage("Content"),
     "contentEmptyTip": MessageLookupByLibrary.simpleMessage(
       "Content cannot be empty",
     ),
+    "contentScheme": MessageLookupByLibrary.simpleMessage("Content"),
     "copy": MessageLookupByLibrary.simpleMessage("Copy"),
     "copyEnvVar": MessageLookupByLibrary.simpleMessage(
       "Copying environment variables",
@@ -172,6 +179,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "core": MessageLookupByLibrary.simpleMessage("Core"),
     "coreInfo": MessageLookupByLibrary.simpleMessage("Core info"),
     "country": MessageLookupByLibrary.simpleMessage("Country"),
+    "crashTest": MessageLookupByLibrary.simpleMessage("Crash test"),
     "create": MessageLookupByLibrary.simpleMessage("Create"),
     "cut": MessageLookupByLibrary.simpleMessage("Cut"),
     "dark": MessageLookupByLibrary.simpleMessage("Dark"),
@@ -188,6 +196,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "delay": MessageLookupByLibrary.simpleMessage("Delay"),
     "delaySort": MessageLookupByLibrary.simpleMessage("Sort by delay"),
     "delete": MessageLookupByLibrary.simpleMessage("Delete"),
+    "deleteColorTip": MessageLookupByLibrary.simpleMessage(
+      "Are you sure you want to delete the current color?",
+    ),
     "deleteProfileTip": MessageLookupByLibrary.simpleMessage(
       "Sure you want to delete the current profile?",
     ),
@@ -199,6 +210,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "detectionTip": MessageLookupByLibrary.simpleMessage(
       "Relying on third-party api is for reference only",
+    ),
+    "developerMode": MessageLookupByLibrary.simpleMessage("Developer mode"),
+    "developerModeEnableTip": MessageLookupByLibrary.simpleMessage(
+      "Developer mode is enabled.",
     ),
     "direct": MessageLookupByLibrary.simpleMessage("Direct"),
     "disclaimer": MessageLookupByLibrary.simpleMessage("Disclaimer"),
@@ -234,6 +249,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "exportFile": MessageLookupByLibrary.simpleMessage("Export file"),
     "exportLogs": MessageLookupByLibrary.simpleMessage("Export logs"),
     "exportSuccess": MessageLookupByLibrary.simpleMessage("Export Success"),
+    "expressiveScheme": MessageLookupByLibrary.simpleMessage("Expressive"),
     "externalController": MessageLookupByLibrary.simpleMessage(
       "ExternalController",
     ),
@@ -251,6 +267,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Generally use offshore DNS",
     ),
     "fallbackFilter": MessageLookupByLibrary.simpleMessage("Fallback filter"),
+    "fidelityScheme": MessageLookupByLibrary.simpleMessage("Fidelity"),
     "file": MessageLookupByLibrary.simpleMessage("File"),
     "fileDesc": MessageLookupByLibrary.simpleMessage("Directly upload profile"),
     "fileIsUpdate": MessageLookupByLibrary.simpleMessage(
@@ -265,6 +282,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "fontFamily": MessageLookupByLibrary.simpleMessage("FontFamily"),
     "fourColumns": MessageLookupByLibrary.simpleMessage("Four columns"),
+    "fruitSaladScheme": MessageLookupByLibrary.simpleMessage("FruitSalad"),
     "general": MessageLookupByLibrary.simpleMessage("General"),
     "generalDesc": MessageLookupByLibrary.simpleMessage(
       "Modify general settings",
@@ -309,6 +327,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "intelligentSelected": MessageLookupByLibrary.simpleMessage(
       "Intelligent selection",
     ),
+    "internet": MessageLookupByLibrary.simpleMessage("Internet"),
     "intranetIP": MessageLookupByLibrary.simpleMessage("Intranet IP"),
     "ipcidr": MessageLookupByLibrary.simpleMessage("Ipcidr"),
     "ipv6Desc": MessageLookupByLibrary.simpleMessage(
@@ -345,12 +364,17 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "logs": MessageLookupByLibrary.simpleMessage("Logs"),
     "logsDesc": MessageLookupByLibrary.simpleMessage("Log capture records"),
+    "logsTest": MessageLookupByLibrary.simpleMessage("Logs test"),
     "loopback": MessageLookupByLibrary.simpleMessage("Loopback unlock tool"),
     "loopbackDesc": MessageLookupByLibrary.simpleMessage(
       "Used for UWP loopback unlocking",
     ),
     "loose": MessageLookupByLibrary.simpleMessage("Loose"),
     "memoryInfo": MessageLookupByLibrary.simpleMessage("Memory info"),
+    "messageTest": MessageLookupByLibrary.simpleMessage("Message test"),
+    "messageTestTip": MessageLookupByLibrary.simpleMessage(
+      "This is a message.",
+    ),
     "min": MessageLookupByLibrary.simpleMessage("Min"),
     "minimizeOnExit": MessageLookupByLibrary.simpleMessage("Minimize on exit"),
     "minimizeOnExitDesc": MessageLookupByLibrary.simpleMessage(
@@ -358,6 +382,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "minutes": MessageLookupByLibrary.simpleMessage("Minutes"),
     "mode": MessageLookupByLibrary.simpleMessage("Mode"),
+    "monochromeScheme": MessageLookupByLibrary.simpleMessage("Monochrome"),
     "months": MessageLookupByLibrary.simpleMessage("Months"),
     "more": MessageLookupByLibrary.simpleMessage("More"),
     "name": MessageLookupByLibrary.simpleMessage("Name"),
@@ -380,12 +405,14 @@ class MessageLookup extends MessageLookupByLibrary {
       "Network detection",
     ),
     "networkSpeed": MessageLookupByLibrary.simpleMessage("Network speed"),
+    "neutralScheme": MessageLookupByLibrary.simpleMessage("Neutral"),
     "noData": MessageLookupByLibrary.simpleMessage("No data"),
     "noHotKey": MessageLookupByLibrary.simpleMessage("No HotKey"),
     "noIcon": MessageLookupByLibrary.simpleMessage("None"),
     "noInfo": MessageLookupByLibrary.simpleMessage("No info"),
     "noMoreInfoDesc": MessageLookupByLibrary.simpleMessage("No more info"),
     "noNetwork": MessageLookupByLibrary.simpleMessage("No network"),
+    "noNetworkApp": MessageLookupByLibrary.simpleMessage("No network APP"),
     "noProxy": MessageLookupByLibrary.simpleMessage("No proxy"),
     "noProxyDesc": MessageLookupByLibrary.simpleMessage(
       "Please create a profile or add a valid profile",
@@ -436,6 +463,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "overrideOriginRules": MessageLookupByLibrary.simpleMessage(
       "Override the original rule",
     ),
+    "palette": MessageLookupByLibrary.simpleMessage("Palette"),
     "password": MessageLookupByLibrary.simpleMessage("Password"),
     "passwordTip": MessageLookupByLibrary.simpleMessage(
       "Password cannot be empty",
@@ -506,10 +534,20 @@ class MessageLookup extends MessageLookupByLibrary {
     "qrcodeDesc": MessageLookupByLibrary.simpleMessage(
       "Scan QR code to obtain profile",
     ),
+    "rainbowScheme": MessageLookupByLibrary.simpleMessage("Rainbow"),
     "recovery": MessageLookupByLibrary.simpleMessage("Recovery"),
     "recoveryAll": MessageLookupByLibrary.simpleMessage("Recovery all data"),
     "recoveryProfiles": MessageLookupByLibrary.simpleMessage(
       "Only recovery profiles",
+    ),
+    "recoveryStrategy": MessageLookupByLibrary.simpleMessage(
+      "Recovery strategy",
+    ),
+    "recoveryStrategy_compatible": MessageLookupByLibrary.simpleMessage(
+      "Compatible",
+    ),
+    "recoveryStrategy_override": MessageLookupByLibrary.simpleMessage(
+      "Override",
     ),
     "recoverySuccess": MessageLookupByLibrary.simpleMessage("Recovery success"),
     "redo": MessageLookupByLibrary.simpleMessage("redo"),
@@ -597,6 +635,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "submit": MessageLookupByLibrary.simpleMessage("Submit"),
     "sync": MessageLookupByLibrary.simpleMessage("Sync"),
     "system": MessageLookupByLibrary.simpleMessage("System"),
+    "systemApp": MessageLookupByLibrary.simpleMessage("System APP"),
     "systemFont": MessageLookupByLibrary.simpleMessage("System font"),
     "systemProxy": MessageLookupByLibrary.simpleMessage("System proxy"),
     "systemProxyDesc": MessageLookupByLibrary.simpleMessage(
@@ -612,6 +651,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Enabling it will allow TCP concurrency",
     ),
     "testUrl": MessageLookupByLibrary.simpleMessage("Test url"),
+    "textScale": MessageLookupByLibrary.simpleMessage("Text Scaling"),
     "theme": MessageLookupByLibrary.simpleMessage("Theme"),
     "themeColor": MessageLookupByLibrary.simpleMessage("Theme color"),
     "themeDesc": MessageLookupByLibrary.simpleMessage(
@@ -623,6 +663,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "time": MessageLookupByLibrary.simpleMessage("Time"),
     "tip": MessageLookupByLibrary.simpleMessage("tip"),
     "toggle": MessageLookupByLibrary.simpleMessage("Toggle"),
+    "tonalSpotScheme": MessageLookupByLibrary.simpleMessage("TonalSpot"),
     "tools": MessageLookupByLibrary.simpleMessage("Tools"),
     "trafficUsage": MessageLookupByLibrary.simpleMessage("Traffic usage"),
     "tun": MessageLookupByLibrary.simpleMessage("TUN"),
@@ -651,6 +692,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "valueExists": MessageLookupByLibrary.simpleMessage(
       "The current value already exists",
     ),
+    "vibrantScheme": MessageLookupByLibrary.simpleMessage("Vibrant"),
     "view": MessageLookupByLibrary.simpleMessage("View"),
     "vpnDesc": MessageLookupByLibrary.simpleMessage(
       "Modify VPN related settings",

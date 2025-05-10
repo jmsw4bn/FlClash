@@ -26,6 +26,10 @@ _$AppSettingPropsImpl _$$AppSettingPropsImplFromJson(
       disclaimerAccepted: json['disclaimerAccepted'] as bool? ?? false,
       minimizeOnExit: json['minimizeOnExit'] as bool? ?? true,
       hidden: json['hidden'] as bool? ?? false,
+      developerMode: json['developerMode'] as bool? ?? false,
+      recoveryStrategy: $enumDecodeNullable(
+              _$RecoveryStrategyEnumMap, json['recoveryStrategy']) ??
+          RecoveryStrategy.compatible,
     );
 
 Map<String, dynamic> _$$AppSettingPropsImplToJson(
@@ -48,14 +52,23 @@ Map<String, dynamic> _$$AppSettingPropsImplToJson(
       'disclaimerAccepted': instance.disclaimerAccepted,
       'minimizeOnExit': instance.minimizeOnExit,
       'hidden': instance.hidden,
+      'developerMode': instance.developerMode,
+      'recoveryStrategy': _$RecoveryStrategyEnumMap[instance.recoveryStrategy]!,
     };
+
+const _$RecoveryStrategyEnumMap = {
+  RecoveryStrategy.compatible: 'compatible',
+  RecoveryStrategy.override: 'override',
+};
 
 const _$DashboardWidgetEnumMap = {
   DashboardWidget.networkSpeed: 'networkSpeed',
+  DashboardWidget.outboundModeV2: 'outboundModeV2',
   DashboardWidget.outboundMode: 'outboundMode',
   DashboardWidget.trafficUsage: 'trafficUsage',
   DashboardWidget.networkDetection: 'networkDetection',
   DashboardWidget.tunButton: 'tunButton',
+  DashboardWidget.vpnButton: 'vpnButton',
   DashboardWidget.systemProxyButton: 'systemProxyButton',
   DashboardWidget.intranetIp: 'intranetIp',
   DashboardWidget.memoryInfo: 'memoryInfo',
@@ -77,6 +90,7 @@ _$AccessControlImpl _$$AccessControlImplFromJson(Map<String, dynamic> json) =>
       sort: $enumDecodeNullable(_$AccessSortTypeEnumMap, json['sort']) ??
           AccessSortType.none,
       isFilterSystemApp: json['isFilterSystemApp'] as bool? ?? true,
+      isFilterNonInternetApp: json['isFilterNonInternetApp'] as bool? ?? true,
     );
 
 Map<String, dynamic> _$$AccessControlImplToJson(_$AccessControlImpl instance) =>
@@ -87,6 +101,7 @@ Map<String, dynamic> _$$AccessControlImplToJson(_$AccessControlImpl instance) =>
       'rejectList': instance.rejectList,
       'sort': _$AccessSortTypeEnumMap[instance.sort]!,
       'isFilterSystemApp': instance.isFilterSystemApp,
+      'isFilterNonInternetApp': instance.isFilterNonInternetApp,
     };
 
 const _$AccessControlModeEnumMap = {
@@ -219,25 +234,62 @@ const _$ProxyCardTypeEnumMap = {
   ProxyCardType.min: 'min',
 };
 
+_$TextScaleImpl _$$TextScaleImplFromJson(Map<String, dynamic> json) =>
+    _$TextScaleImpl(
+      enable: json['enable'] ?? false,
+      scale: json['scale'] ?? 1.0,
+    );
+
+Map<String, dynamic> _$$TextScaleImplToJson(_$TextScaleImpl instance) =>
+    <String, dynamic>{
+      'enable': instance.enable,
+      'scale': instance.scale,
+    };
+
 _$ThemePropsImpl _$$ThemePropsImplFromJson(Map<String, dynamic> json) =>
     _$ThemePropsImpl(
       primaryColor: (json['primaryColor'] as num?)?.toInt(),
+      primaryColors: (json['primaryColors'] as List<dynamic>?)
+              ?.map((e) => (e as num).toInt())
+              .toList() ??
+          defaultPrimaryColors,
       themeMode: $enumDecodeNullable(_$ThemeModeEnumMap, json['themeMode']) ??
-          ThemeMode.system,
+          ThemeMode.dark,
+      schemeVariant: $enumDecodeNullable(
+              _$DynamicSchemeVariantEnumMap, json['schemeVariant']) ??
+          DynamicSchemeVariant.content,
       pureBlack: json['pureBlack'] as bool? ?? false,
+      textScale: json['textScale'] == null
+          ? const TextScale()
+          : TextScale.fromJson(json['textScale'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$ThemePropsImplToJson(_$ThemePropsImpl instance) =>
     <String, dynamic>{
       'primaryColor': instance.primaryColor,
+      'primaryColors': instance.primaryColors,
       'themeMode': _$ThemeModeEnumMap[instance.themeMode]!,
+      'schemeVariant': _$DynamicSchemeVariantEnumMap[instance.schemeVariant]!,
       'pureBlack': instance.pureBlack,
+      'textScale': instance.textScale,
     };
 
 const _$ThemeModeEnumMap = {
   ThemeMode.system: 'system',
   ThemeMode.light: 'light',
   ThemeMode.dark: 'dark',
+};
+
+const _$DynamicSchemeVariantEnumMap = {
+  DynamicSchemeVariant.tonalSpot: 'tonalSpot',
+  DynamicSchemeVariant.fidelity: 'fidelity',
+  DynamicSchemeVariant.monochrome: 'monochrome',
+  DynamicSchemeVariant.neutral: 'neutral',
+  DynamicSchemeVariant.vibrant: 'vibrant',
+  DynamicSchemeVariant.expressive: 'expressive',
+  DynamicSchemeVariant.content: 'content',
+  DynamicSchemeVariant.rainbow: 'rainbow',
+  DynamicSchemeVariant.fruitSalad: 'fruitSalad',
 };
 
 _$ConfigImpl _$$ConfigImplFromJson(Map<String, dynamic> json) => _$ConfigImpl(
