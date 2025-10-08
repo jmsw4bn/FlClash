@@ -27,19 +27,20 @@ class CommonPopupRoute<T> extends PopupRoute<T> {
     Animation<double> animation,
     Animation<double> secondaryAnimation,
   ) {
-    return builder(
-      context,
-    );
+    return builder(context);
   }
 
   @override
-  Widget buildTransitions(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation, Widget child) {
+  Widget buildTransitions(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
     final align = Alignment.topRight;
-    final animationValue = CurvedAnimation(
-      parent: animation,
-      curve: Curves.easeIn,
-    ).value;
+    final curveAnimation = animation
+        .drive(Tween(begin: 0.0, end: 1.0))
+        .drive(CurveTween(curve: Curves.easeOutBack));
     return SafeArea(
       child: ValueListenableBuilder(
         valueListenable: offsetNotifier,
@@ -48,10 +49,7 @@ class CommonPopupRoute<T> extends PopupRoute<T> {
             alignment: align,
             child: CustomSingleChildLayout(
               delegate: OverflowAwareLayoutDelegate(
-                offset: value.translate(
-                  48,
-                  -8,
-                ),
+                offset: value.translate(48, -8),
               ),
               child: child,
             ),
@@ -59,46 +57,44 @@ class CommonPopupRoute<T> extends PopupRoute<T> {
         },
         child: AnimatedBuilder(
           animation: animation,
-          builder: (_, Widget? child) {
-            return Opacity(
-              opacity: 0.1 + 0.9 * animationValue,
-              child: Transform.scale(
+          builder: (_, child) {
+            return FadeTransition(
+              opacity: curveAnimation,
+              child: ScaleTransition(
                 alignment: align,
-                scale: 0.8 + 0.2 * animationValue,
-                child: Transform.translate(
-                  offset: Offset(0, -10) * (1 - animationValue),
-                  child: child!,
+                scale: curveAnimation,
+                child: SlideTransition(
+                  position: curveAnimation.drive(
+                    Tween(begin: const Offset(0, -0.02), end: Offset.zero),
+                  ),
+                  child: child,
                 ),
               ),
             );
           },
-          child: builder(
-            context,
-          ),
+          child: builder(context),
         ),
       ),
     );
   }
 
   @override
-  Duration get transitionDuration => const Duration(milliseconds: 150);
+  Duration get transitionDuration => const Duration(milliseconds: 250);
 }
 
 class PopupController extends ValueNotifier<bool> {
   PopupController() : super(false);
 
-  open() {
+  void open() {
     value = true;
   }
 
-  close() {
+  void close() {
     value = false;
   }
 }
 
-typedef PopupOpen = Function({
-  Offset offset,
-});
+typedef PopupOpen = Function({Offset offset});
 
 class CommonPopupBox extends StatefulWidget {
   final Widget Function(PopupOpen open) targetBuilder;
@@ -119,26 +115,26 @@ class _CommonPopupBoxState extends State<CommonPopupBox> {
   final _targetOffsetValueNotifier = ValueNotifier<Offset>(Offset.zero);
   Offset _offset = Offset.zero;
 
-  _open({Offset offset = Offset.zero}) {
+  void _open({Offset offset = Offset.zero}) {
     _offset = offset;
     _updateOffset();
     _isOpen = true;
     Navigator.of(context)
         .push(
-      CommonPopupRoute(
-        barrierLabel: utils.id,
-        builder: (BuildContext context) {
-          return widget.popup;
-        },
-        offsetNotifier: _targetOffsetValueNotifier,
-      ),
-    )
+          CommonPopupRoute(
+            barrierLabel: utils.id,
+            builder: (BuildContext context) {
+              return widget.popup;
+            },
+            offsetNotifier: _targetOffsetValueNotifier,
+          ),
+        )
         .then((_) {
-      _isOpen = false;
-    });
+          _isOpen = false;
+        });
   }
 
-  _updateOffset() {
+  void _updateOffset() {
     final renderBox = context.findRenderObject() as RenderBox?;
     if (renderBox == null) {
       return;
@@ -148,31 +144,28 @@ class _CommonPopupBoxState extends State<CommonPopupBox> {
         .localToGlobal(
           Offset.zero.translate(viewPadding.right, viewPadding.top),
         )
-        .translate(
-          _offset.dx,
-          _offset.dy,
-        );
+        .translate(_offset.dx, _offset.dy);
   }
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (_, __) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (_isOpen) {
-          _updateOffset();
-        }
-      });
-      return widget.targetBuilder(_open);
-    });
+    return LayoutBuilder(
+      builder: (_, _) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (_isOpen) {
+            _updateOffset();
+          }
+        });
+        return widget.targetBuilder(_open);
+      },
+    );
   }
 }
 
 class OverflowAwareLayoutDelegate extends SingleChildLayoutDelegate {
   final Offset offset;
 
-  OverflowAwareLayoutDelegate({
-    required this.offset,
-  });
+  OverflowAwareLayoutDelegate({required this.offset});
 
   @override
   Size getSize(BoxConstraints constraints) {
@@ -201,12 +194,16 @@ class OverflowAwareLayoutDelegate extends SingleChildLayoutDelegate {
 
 class CommonPopupMenu extends StatelessWidget {
   final List<PopupMenuItemData> items;
-  final double? minWidth;
+  final double minWidth;
+  final double minItemVerticalPadding;
+  final double fontSize;
 
   const CommonPopupMenu({
     super.key,
     required this.items,
-    this.minWidth,
+    this.minWidth = 200,
+    this.minItemVerticalPadding = 16,
+    this.fontSize = 15,
   });
 
   Widget _popupMenuItem(
@@ -214,51 +211,49 @@ class CommonPopupMenu extends StatelessWidget {
     required PopupMenuItemData item,
     required int index,
   }) {
-    final isDanger = item.type == PopupMenuItemType.danger;
     final onPressed = item.onPressed;
     final disabled = onPressed == null;
-    final color = isDanger
-        ? disabled
-            ? context.colorScheme.error.opacity30
-            : context.colorScheme.error
-        : disabled
-            ? context.colorScheme.onSurface.opacity30
-            : context.colorScheme.onSurface;
-    return InkWell(
-      onTap: onPressed != null
+    final color = item.danger
+        ? context.colorScheme.onError
+        : context.colorScheme.onSurface;
+    final foregroundColor = disabled ? color.opacity30 : color;
+    final backgroundColor = item.danger
+        ? context.colorScheme.error
+        : context.colorScheme.surfaceContainer;
+    return TextButton(
+      style: TextButton.styleFrom(
+        padding: EdgeInsets.zero,
+        shape: LinearBorder.none,
+        foregroundColor: foregroundColor,
+        backgroundColor: backgroundColor,
+      ),
+      onPressed: onPressed != null
           ? () {
               Navigator.of(context).pop();
               onPressed();
             }
           : null,
       child: Container(
-        constraints: BoxConstraints(
-          minWidth: minWidth ?? 120,
-        ),
+        constraints: BoxConstraints(minWidth: minWidth),
         padding: EdgeInsets.only(
           left: 16,
           right: 64,
-          top: 14,
-          bottom: 14,
+          top: minItemVerticalPadding,
+          bottom: minItemVerticalPadding,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.max,
           children: [
             if (item.icon != null) ...[
-              Icon(
-                item.icon,
-                size: item.iconSize ?? 18,
-                color: color,
-              ),
-              SizedBox(
-                width: 16,
-              ),
+              Icon(item.icon, size: fontSize + 4, color: foregroundColor),
+              SizedBox(width: 16),
             ],
             Flexible(
               child: Text(
                 item.label,
                 style: context.textTheme.bodyMedium?.copyWith(
-                  color: color,
+                  color: foregroundColor,
+                  fontSize: fontSize,
                 ),
               ),
             ),
@@ -273,26 +268,19 @@ class CommonPopupMenu extends StatelessWidget {
     return IntrinsicHeight(
       child: IntrinsicWidth(
         child: Card(
-          elevation: 8,
+          elevation: 12,
           color: context.colorScheme.surfaceContainer,
           clipBehavior: Clip.antiAlias,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+          shape: RoundedSuperellipseBorder(
+            borderRadius: BorderRadius.circular(14),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               for (final item in items.asMap().entries) ...[
-                _popupMenuItem(
-                  context,
-                  item: item.value,
-                  index: item.key,
-                ),
-                if (item.value != items.last)
-                  Divider(
-                    height: 0,
-                  ),
+                _popupMenuItem(context, item: item.value, index: item.key),
+                if (item.value != items.last) Divider(height: 0),
               ],
             ],
           ),

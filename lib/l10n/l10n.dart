@@ -28,10 +28,9 @@ class AppLocalizations {
   static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<AppLocalizations> load(Locale locale) {
-    final name =
-        (locale.countryCode?.isEmpty ?? false)
-            ? locale.languageCode
-            : locale.toString();
+    final name = (locale.countryCode?.isEmpty ?? false)
+        ? locale.languageCode
+        : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
@@ -140,16 +139,6 @@ class AppLocalizations {
     return Intl.message('Core info', name: 'coreInfo', desc: '', args: []);
   }
 
-  /// `Unable to obtain core info`
-  String get nullCoreInfoDesc {
-    return Intl.message(
-      'Unable to obtain core info',
-      name: 'nullCoreInfoDesc',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Network speed`
   String get networkSpeed {
     return Intl.message(
@@ -213,11 +202,6 @@ class AppLocalizations {
       desc: '',
       args: [],
     );
-  }
-
-  /// `No logs`
-  String get nullLogsDesc {
-    return Intl.message('No logs', name: 'nullLogsDesc', desc: '', args: []);
   }
 
   /// `Settings`
@@ -1160,26 +1144,6 @@ class AppLocalizations {
     return Intl.message('Password', name: 'password', desc: '', args: []);
   }
 
-  /// `Password cannot be empty`
-  String get passwordTip {
-    return Intl.message(
-      'Password cannot be empty',
-      name: 'passwordTip',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Account cannot be empty`
-  String get accountTip {
-    return Intl.message(
-      'Account cannot be empty',
-      name: 'accountTip',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Check for updates`
   String get checkUpdate {
     return Intl.message(
@@ -1465,26 +1429,6 @@ class AppLocalizations {
     );
   }
 
-  /// `No requests`
-  String get nullRequestsDesc {
-    return Intl.message(
-      'No requests',
-      name: 'nullRequestsDesc',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `No connections`
-  String get nullConnectionsDesc {
-    return Intl.message(
-      'No connections',
-      name: 'nullConnectionsDesc',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Intranet IP`
   String get intranetIP {
     return Intl.message('Intranet IP', name: 'intranetIP', desc: '', args: []);
@@ -1695,16 +1639,6 @@ class AppLocalizations {
     return Intl.message(
       'When turned on, only statistics proxy traffic',
       name: 'onlyStatisticsProxyDesc',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Sure you want to delete the current profile?`
-  String get deleteProfileTip {
-    return Intl.message(
-      'Sure you want to delete the current profile?',
-      name: 'deleteProfileTip',
       desc: '',
       args: [],
     );
@@ -1928,16 +1862,6 @@ class AppLocalizations {
   /// `Value`
   String get value {
     return Intl.message('Value', name: 'value', desc: '', args: []);
-  }
-
-  /// `Cannot be empty`
-  String get notEmpty {
-    return Intl.message(
-      'Cannot be empty',
-      name: 'notEmpty',
-      desc: '',
-      args: [],
-    );
   }
 
   /// `Add Hosts`
@@ -2615,11 +2539,6 @@ class AppLocalizations {
     );
   }
 
-  /// `No proxies`
-  String get nullProxies {
-    return Intl.message('No proxies', name: 'nullProxies', desc: '', args: []);
-  }
-
   /// `Copy success`
   String get copySuccess {
     return Intl.message(
@@ -2663,26 +2582,6 @@ class AppLocalizations {
   /// `Listen`
   String get listen {
     return Intl.message('Listen', name: 'listen', desc: '', args: []);
-  }
-
-  /// `The current key already exists`
-  String get keyExists {
-    return Intl.message(
-      'The current key already exists',
-      name: 'keyExists',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `The current value already exists`
-  String get valueExists {
-    return Intl.message(
-      'The current value already exists',
-      name: 'valueExists',
-      desc: '',
-      args: [],
-    );
   }
 
   /// `undo`
@@ -2735,16 +2634,6 @@ class AppLocalizations {
     return Intl.message('Add rule', name: 'addRule', desc: '', args: []);
   }
 
-  /// `Rule provider cannot be empty`
-  String get ruleProviderEmptyTip {
-    return Intl.message(
-      'Rule provider cannot be empty',
-      name: 'ruleProviderEmptyTip',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Rule name`
   String get ruleName {
     return Intl.message('Rule name', name: 'ruleName', desc: '', args: []);
@@ -2755,44 +2644,14 @@ class AppLocalizations {
     return Intl.message('Content', name: 'content', desc: '', args: []);
   }
 
-  /// `Content cannot be empty`
-  String get contentEmptyTip {
-    return Intl.message(
-      'Content cannot be empty',
-      name: 'contentEmptyTip',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Sub rule`
   String get subRule {
     return Intl.message('Sub rule', name: 'subRule', desc: '', args: []);
   }
 
-  /// `Sub rule content cannot be empty`
-  String get subRuleEmptyTip {
-    return Intl.message(
-      'Sub rule content cannot be empty',
-      name: 'subRuleEmptyTip',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Rule target`
   String get ruleTarget {
     return Intl.message('Rule target', name: 'ruleTarget', desc: '', args: []);
-  }
-
-  /// `Rule target cannot be empty`
-  String get ruleTargetEmptyTip {
-    return Intl.message(
-      'Rule target cannot be empty',
-      name: 'ruleTargetEmptyTip',
-      desc: '',
-      args: [],
-    );
   }
 
   /// `Source IP`
@@ -2845,16 +2704,6 @@ class AppLocalizations {
     );
   }
 
-  /// `Are you sure you want to delete the selected rule?`
-  String get deleteRuleTip {
-    return Intl.message(
-      'Are you sure you want to delete the selected rule?',
-      name: 'deleteRuleTip',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Do you want to save the changes?`
   String get saveChanges {
     return Intl.message(
@@ -2900,26 +2749,6 @@ class AppLocalizations {
     return Intl.message(
       'Are you sure you want to save?',
       name: 'saveTip',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Are you sure you want to delete the current color?`
-  String get deleteColorTip {
-    return Intl.message(
-      'Are you sure you want to delete the current color?',
-      name: 'deleteColorTip',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Current color already exists`
-  String get colorExists {
-    return Intl.message(
-      'Current color already exists',
-      name: 'colorExists',
       desc: '',
       args: [],
     );
@@ -3118,6 +2947,416 @@ class AppLocalizations {
   /// `Logs test`
   String get logsTest {
     return Intl.message('Logs test', name: 'logsTest', desc: '', args: []);
+  }
+
+  /// `{label} cannot be empty`
+  String emptyTip(Object label) {
+    return Intl.message(
+      '$label cannot be empty',
+      name: 'emptyTip',
+      desc: '',
+      args: [label],
+    );
+  }
+
+  /// `{label} must be a url`
+  String urlTip(Object label) {
+    return Intl.message(
+      '$label must be a url',
+      name: 'urlTip',
+      desc: '',
+      args: [label],
+    );
+  }
+
+  /// `{label} must be a number`
+  String numberTip(Object label) {
+    return Intl.message(
+      '$label must be a number',
+      name: 'numberTip',
+      desc: '',
+      args: [label],
+    );
+  }
+
+  /// `Interval`
+  String get interval {
+    return Intl.message('Interval', name: 'interval', desc: '', args: []);
+  }
+
+  /// `Current {label} already exists`
+  String existsTip(Object label) {
+    return Intl.message(
+      'Current $label already exists',
+      name: 'existsTip',
+      desc: '',
+      args: [label],
+    );
+  }
+
+  /// `Are you sure you want to delete the current {label}?`
+  String deleteTip(Object label) {
+    return Intl.message(
+      'Are you sure you want to delete the current $label?',
+      name: 'deleteTip',
+      desc: '',
+      args: [label],
+    );
+  }
+
+  /// `Are you sure you want to delete the selected {label}?`
+  String deleteMultipTip(Object label) {
+    return Intl.message(
+      'Are you sure you want to delete the selected $label?',
+      name: 'deleteMultipTip',
+      desc: '',
+      args: [label],
+    );
+  }
+
+  /// `No {label} at the moment`
+  String nullTip(Object label) {
+    return Intl.message(
+      'No $label at the moment',
+      name: 'nullTip',
+      desc: '',
+      args: [label],
+    );
+  }
+
+  /// `Script`
+  String get script {
+    return Intl.message('Script', name: 'script', desc: '', args: []);
+  }
+
+  /// `Color`
+  String get color {
+    return Intl.message('Color', name: 'color', desc: '', args: []);
+  }
+
+  /// `Rename`
+  String get rename {
+    return Intl.message('Rename', name: 'rename', desc: '', args: []);
+  }
+
+  /// `Unnamed`
+  String get unnamed {
+    return Intl.message('Unnamed', name: 'unnamed', desc: '', args: []);
+  }
+
+  /// `Please enter a script name`
+  String get pleaseEnterScriptName {
+    return Intl.message(
+      'Please enter a script name',
+      name: 'pleaseEnterScriptName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Does not take effect in script mode`
+  String get overrideInvalidTip {
+    return Intl.message(
+      'Does not take effect in script mode',
+      name: 'overrideInvalidTip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mixed Port`
+  String get mixedPort {
+    return Intl.message('Mixed Port', name: 'mixedPort', desc: '', args: []);
+  }
+
+  /// `Socks Port`
+  String get socksPort {
+    return Intl.message('Socks Port', name: 'socksPort', desc: '', args: []);
+  }
+
+  /// `Redir Port`
+  String get redirPort {
+    return Intl.message('Redir Port', name: 'redirPort', desc: '', args: []);
+  }
+
+  /// `Tproxy Port`
+  String get tproxyPort {
+    return Intl.message('Tproxy Port', name: 'tproxyPort', desc: '', args: []);
+  }
+
+  /// `{label} must be between 1024 and 49151`
+  String portTip(Object label) {
+    return Intl.message(
+      '$label must be between 1024 and 49151',
+      name: 'portTip',
+      desc: '',
+      args: [label],
+    );
+  }
+
+  /// `Please enter a different port`
+  String get portConflictTip {
+    return Intl.message(
+      'Please enter a different port',
+      name: 'portConflictTip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Import`
+  String get import {
+    return Intl.message('Import', name: 'import', desc: '', args: []);
+  }
+
+  /// `Import from file`
+  String get importFile {
+    return Intl.message(
+      'Import from file',
+      name: 'importFile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Import from URL`
+  String get importUrl {
+    return Intl.message(
+      'Import from URL',
+      name: 'importUrl',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Auto set system DNS`
+  String get autoSetSystemDns {
+    return Intl.message(
+      'Auto set system DNS',
+      name: 'autoSetSystemDns',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{label} details`
+  String details(Object label) {
+    return Intl.message(
+      '$label details',
+      name: 'details',
+      desc: '',
+      args: [label],
+    );
+  }
+
+  /// `Creation time`
+  String get creationTime {
+    return Intl.message(
+      'Creation time',
+      name: 'creationTime',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Process`
+  String get process {
+    return Intl.message('Process', name: 'process', desc: '', args: []);
+  }
+
+  /// `Host`
+  String get host {
+    return Intl.message('Host', name: 'host', desc: '', args: []);
+  }
+
+  /// `Destination`
+  String get destination {
+    return Intl.message('Destination', name: 'destination', desc: '', args: []);
+  }
+
+  /// `Destination GeoIP`
+  String get destinationGeoIP {
+    return Intl.message(
+      'Destination GeoIP',
+      name: 'destinationGeoIP',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Destination IPASN`
+  String get destinationIPASN {
+    return Intl.message(
+      'Destination IPASN',
+      name: 'destinationIPASN',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Special proxy`
+  String get specialProxy {
+    return Intl.message(
+      'Special proxy',
+      name: 'specialProxy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `special rules`
+  String get specialRules {
+    return Intl.message(
+      'special rules',
+      name: 'specialRules',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Remote destination`
+  String get remoteDestination {
+    return Intl.message(
+      'Remote destination',
+      name: 'remoteDestination',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Network type`
+  String get networkType {
+    return Intl.message(
+      'Network type',
+      name: 'networkType',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Proxy chains`
+  String get proxyChains {
+    return Intl.message(
+      'Proxy chains',
+      name: 'proxyChains',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Log`
+  String get log {
+    return Intl.message('Log', name: 'log', desc: '', args: []);
+  }
+
+  /// `Connection`
+  String get connection {
+    return Intl.message('Connection', name: 'connection', desc: '', args: []);
+  }
+
+  /// `Request`
+  String get request {
+    return Intl.message('Request', name: 'request', desc: '', args: []);
+  }
+
+  /// `Connected`
+  String get connected {
+    return Intl.message('Connected', name: 'connected', desc: '', args: []);
+  }
+
+  /// `Disconnected`
+  String get disconnected {
+    return Intl.message(
+      'Disconnected',
+      name: 'disconnected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Connecting...`
+  String get connecting {
+    return Intl.message(
+      'Connecting...',
+      name: 'connecting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to restart the core?`
+  String get restartCoreTip {
+    return Intl.message(
+      'Are you sure you want to restart the core?',
+      name: 'restartCoreTip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to force restart the core?`
+  String get forceRestartCoreTip {
+    return Intl.message(
+      'Are you sure you want to force restart the core?',
+      name: 'forceRestartCoreTip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `DNS hijacking`
+  String get dnsHijacking {
+    return Intl.message(
+      'DNS hijacking',
+      name: 'dnsHijacking',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Core status`
+  String get coreStatus {
+    return Intl.message('Core status', name: 'coreStatus', desc: '', args: []);
+  }
+
+  /// `Data Collection Notice`
+  String get dataCollectionTip {
+    return Intl.message(
+      'Data Collection Notice',
+      name: 'dataCollectionTip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This app uses Firebase Crashlytics to collect crash information to improve app stability.\nThe collected data includes device information and crash details, but does not contain personal sensitive data.\nYou can disable this feature in settings.`
+  String get dataCollectionContent {
+    return Intl.message(
+      'This app uses Firebase Crashlytics to collect crash information to improve app stability.\nThe collected data includes device information and crash details, but does not contain personal sensitive data.\nYou can disable this feature in settings.',
+      name: 'dataCollectionContent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Crash Analysis`
+  String get crashlytics {
+    return Intl.message(
+      'Crash Analysis',
+      name: 'crashlytics',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `When enabled, automatically uploads crash logs without sensitive information when the app crashes`
+  String get crashlyticsTip {
+    return Intl.message(
+      'When enabled, automatically uploads crash logs without sensitive information when the app crashes',
+      name: 'crashlyticsTip',
+      desc: '',
+      args: [],
+    );
   }
 }
 

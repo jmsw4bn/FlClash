@@ -16,21 +16,21 @@ class Render {
     return _instance!;
   }
 
-  active() {
+  void active() {
     resume();
     pause();
   }
 
-  pause() {
+  void pause() {
     throttler.call(
-      DebounceTag.renderPause,
+      FunctionTag.renderPause,
       _pause,
       duration: Duration(seconds: 5),
     );
   }
 
-  resume() {
-    throttler.cancel(DebounceTag.renderPause);
+  void resume() {
+    throttler.cancel(FunctionTag.renderPause);
     _resume();
   }
 
@@ -41,7 +41,7 @@ class Render {
     _drawFrame = _dispatcher.onDrawFrame;
     _dispatcher.onBeginFrame = null;
     _dispatcher.onDrawFrame = null;
-    commonPrint.log("pause");
+    commonPrint.log('pause');
   }
 
   void _resume() {
@@ -50,7 +50,7 @@ class Render {
     _dispatcher.onBeginFrame = _beginFrame;
     _dispatcher.onDrawFrame = _drawFrame;
     _dispatcher.scheduleFrame();
-    commonPrint.log("resume");
+    commonPrint.log('resume');
   }
 }
 

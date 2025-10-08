@@ -7,10 +7,11 @@ import 'package:fl_clash/widgets/null_status.dart';
 import 'package:flutter/material.dart';
 
 import 'card.dart';
+import 'effect.dart';
 import 'float_layout.dart';
 import 'list.dart';
 
-class OptionsDialog<T> extends StatefulWidget {
+class OptionsDialog<T> extends StatelessWidget {
   final String title;
   final List<T> options;
   final T value;
@@ -25,49 +26,38 @@ class OptionsDialog<T> extends StatefulWidget {
   });
 
   @override
-  State<OptionsDialog<T>> createState() => _OptionsDialogState();
-}
-
-class _OptionsDialogState<T> extends State<OptionsDialog<T>> {
-  final _defaultValue = "";
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final context =
-          GlobalObjectKey(widget.value ?? _defaultValue).currentContext;
-      if (context != null) {
-        Scrollable.ensureVisible(context);
-      }
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return CommonDialog(
-      title: widget.title,
-      padding: const EdgeInsets.symmetric(
-        horizontal: 8,
-        vertical: 16,
-      ),
-      child: Wrap(
-        children: [
-          for (final option in widget.options)
-            ListItem.radio(
-              key: GlobalObjectKey(option ?? _defaultValue),
-              delegate: RadioDelegate(
-                value: option,
-                groupValue: widget.value,
-                onChanged: (T? value) {
-                  Navigator.of(context).pop(value);
+      title: title,
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+      child: RadioGroup(
+        onChanged: (value) {
+          Navigator.of(context).pop(value);
+        },
+        groupValue: value,
+        child: Wrap(
+          children: [
+            for (final option in options)
+              Builder(
+                builder: (context) {
+                  if (value == option) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      Scrollable.ensureVisible(context);
+                    });
+                  }
+                  return ListItem.radio(
+                    delegate: RadioDelegate(
+                      value: option,
+                      onTab: () {
+                        Navigator.of(context).pop(option);
+                      },
+                    ),
+                    title: Text(textBuilder(option)),
+                  );
                 },
               ),
-              title: Text(
-                widget.textBuilder(option),
-              ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -99,7 +89,12 @@ class InputDialog extends StatefulWidget {
   final String title;
   final String value;
   final String? suffixText;
+  final String? labelText;
   final String? resetValue;
+  final String? hintText;
+  final FormFieldValidator<String>? validator;
+  final AutovalidateMode? autovalidateMode;
+  final bool? obscureText;
 
   const InputDialog({
     super.key,
@@ -107,6 +102,11 @@ class InputDialog extends StatefulWidget {
     required this.value,
     this.suffixText,
     this.resetValue,
+    this.hintText,
+    this.validator,
+    this.obscureText,
+    this.labelText,
+    this.autovalidateMode = AutovalidateMode.onUserInteraction,
   });
 
   @override
@@ -114,6 +114,8 @@ class InputDialog extends StatefulWidget {
 }
 
 class _InputDialogState extends State<InputDialog> {
+  final _formKey = GlobalKey<FormState>();
+
   late TextEditingController textController;
 
   String get value => widget.value;
@@ -125,17 +127,16 @@ class _InputDialogState extends State<InputDialog> {
   @override
   void initState() {
     super.initState();
-    textController = TextEditingController(
-      text: value,
-    );
+    textController = TextEditingController(text: value);
   }
 
-  _handleUpdate() async {
+  Future<void> _handleUpdate() async {
+    if (_formKey.currentState?.validate() == false) return;
     final text = textController.value.text;
     Navigator.of(context).pop<String>(text);
   }
 
-  _handleReset() async {
+  Future<void> _handleReset() async {
     if (widget.resetValue == null) {
       return;
     }
@@ -153,31 +154,38 @@ class _InputDialogState extends State<InputDialog> {
             onPressed: _handleReset,
             child: Text(appLocalizations.reset),
           ),
-          const SizedBox(
-            width: 4,
-          ),
+          const SizedBox(width: 4),
         ],
         TextButton(
           onPressed: _handleUpdate,
           child: Text(appLocalizations.submit),
-        )
+        ),
       ],
-      child: Wrap(
-        runSpacing: 16,
-        children: [
-          TextField(
-            maxLines: 1,
-            minLines: 1,
-            controller: textController,
-            decoration: InputDecoration(
-              border: const OutlineInputBorder(),
-              suffixText: suffixText,
+      child: Form(
+        autovalidateMode: widget.autovalidateMode,
+        key: _formKey,
+        child: Wrap(
+          runSpacing: 16,
+          children: [
+            TextFormField(
+              obscureText: widget.obscureText ?? false,
+              keyboardType: TextInputType.url,
+              maxLines: widget.obscureText == true ? 1 : 5,
+              minLines: 1,
+              controller: textController,
+              onFieldSubmitted: (_) {
+                _handleUpdate();
+              },
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                suffixText: suffixText,
+                hintText: widget.hintText,
+                labelText: widget.labelText,
+              ),
+              validator: widget.validator,
             ),
-            onSubmitted: (_) {
-              _handleUpdate();
-            },
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -203,37 +211,30 @@ class ListInputPage extends StatelessWidget {
     this.subtitleBuilder,
   });
 
-  _handleAddOrEdit([String? item]) async {
+  Future<void> _handleAddOrEdit([String? item]) async {
     uniqueValidator(String? value) {
-      final index = items.indexWhere(
-        (entry) {
-          return entry == value;
-        },
-      );
+      final index = items.indexWhere((entry) {
+        return entry == value;
+      });
       final current = item == value;
       if (index != -1 && !current) {
-        return appLocalizations.valueExists;
+        return appLocalizations.existsTip(appLocalizations.value);
       }
       return null;
     }
 
     final valueField = Field(
       label: valueLabel ?? appLocalizations.value,
-      value: item ?? "",
+      value: item ?? '',
       validator: uniqueValidator,
     );
     final value = await globalState.showCommonDialog<String>(
-      child: AddDialog(
-        valueField: valueField,
-        title: title,
-      ),
+      child: AddDialog(valueField: valueField, title: title),
     );
     if (value == null) return;
-    final index = items.indexWhere(
-      (entry) {
-        return entry == item;
-      },
-    );
+    final index = items.indexWhere((entry) {
+      return entry == item;
+    });
     final nextItems = List<String>.from(items);
     if (item != null) {
       nextItems[index] = value;
@@ -243,15 +244,11 @@ class ListInputPage extends StatelessWidget {
     onChange(nextItems);
   }
 
-  _handleDelete(String? item) {
-    final entries = List<String>.from(
-      items,
-    );
-    final index = entries.indexWhere(
-      (entry) {
-        return entry == item;
-      },
-    );
+  void _handleDelete(String? item) {
+    final entries = List<String>.from(items);
+    final index = entries.indexWhere((entry) {
+      return entry == item;
+    });
     if (index != -1) {
       entries.removeAt(index);
     }
@@ -272,24 +269,20 @@ class ListInputPage extends StatelessWidget {
       child: items.isEmpty
           ? NullStatus(label: appLocalizations.noData)
           : ReorderableListView.builder(
-              padding: const EdgeInsets.only(
-                bottom: 16 + 64,
-                left: 16,
-                right: 16,
-              ),
+              padding: const EdgeInsets.only(bottom: 16 + 64),
               buildDefaultDragHandles: false,
               itemCount: items.length,
               itemBuilder: (context, index) {
                 final e = items[index];
-                return Padding(
+                return _InputItem(
                   key: ValueKey(e),
-                  padding: const EdgeInsets.symmetric(vertical: 6),
-                  child: ReorderableDragStartListener(
+                  ReorderableDelayedDragStartListener(
                     index: index,
                     child: CommonCard(
                       child: ListItem(
-                        leading:
-                            leadingBuilder != null ? leadingBuilder!(e) : null,
+                        leading: leadingBuilder != null
+                            ? leadingBuilder!(e)
+                            : null,
                         title: titleBuilder(e),
                         subtitle: subtitleBuilder != null
                             ? subtitleBuilder!(e)
@@ -345,33 +338,29 @@ class MapInputPage extends StatelessWidget {
   });
 
   List<MapEntry<String, String>> get items =>
-      List<MapEntry<String, String>>.from(
-        map.entries,
-      );
+      List<MapEntry<String, String>>.from(map.entries);
 
-  _handleAddOrEdit([MapEntry<String, String>? item]) async {
+  Future<void> _handleAddOrEdit([MapEntry<String, String>? item]) async {
     uniqueValidator(String? value) {
-      final index = items.indexWhere(
-        (entry) {
-          return entry.key == value;
-        },
-      );
+      final index = items.indexWhere((entry) {
+        return entry.key == value;
+      });
       final current = item?.key == value;
       if (index != -1 && !current) {
-        return appLocalizations.keyExists;
+        return appLocalizations.existsTip(appLocalizations.key);
       }
       return null;
     }
 
     final keyField = Field(
       label: keyLabel ?? appLocalizations.key,
-      value: item == null ? "" : item.key,
+      value: item == null ? '' : item.key,
       validator: uniqueValidator,
     );
 
     final valueField = Field(
       label: valueLabel ?? appLocalizations.value,
-      value: item == null ? "" : item.value,
+      value: item == null ? '' : item.value,
     );
 
     final value = await globalState.showCommonDialog<MapEntry<String, String>>(
@@ -382,11 +371,9 @@ class MapInputPage extends StatelessWidget {
       ),
     );
     if (value == null) return;
-    final index = items.indexWhere(
-      (entry) {
-        return entry.key == item?.key;
-      },
-    );
+    final index = items.indexWhere((entry) {
+      return entry.key == item?.key;
+    });
 
     final nextItems = List<MapEntry<String, String>>.from(items);
     if (item != null) {
@@ -397,15 +384,11 @@ class MapInputPage extends StatelessWidget {
     onChange(Map.fromEntries(nextItems));
   }
 
-  _handleDelete(MapEntry<String, String> item) {
-    final entries = List<MapEntry<String, String>>.from(
-      items,
-    );
-    final index = entries.indexWhere(
-      (entry) {
-        return entry.key == item.key && item.value == entry.value;
-      },
-    );
+  void _handleDelete(MapEntry<String, String> item) {
+    final entries = List<MapEntry<String, String>>.from(items);
+    final index = entries.indexWhere((entry) {
+      return entry.key == item.key && item.value == entry.value;
+    });
     if (index != -1) {
       entries.removeAt(index);
     }
@@ -426,24 +409,21 @@ class MapInputPage extends StatelessWidget {
       child: items.isEmpty
           ? NullStatus(label: appLocalizations.noData)
           : ReorderableListView.builder(
-              padding: const EdgeInsets.only(
-                bottom: 16 + 64,
-                left: 16,
-                right: 16,
-              ),
+              padding: const EdgeInsets.only(bottom: 16 + 64),
+              proxyDecorator: proxyDecorator,
               buildDefaultDragHandles: false,
               itemCount: items.length,
               itemBuilder: (_, index) {
                 final e = items[index];
-                return Padding(
+                return _InputItem(
                   key: ValueKey(e.key),
-                  padding: const EdgeInsets.symmetric(vertical: 6),
-                  child: ReorderableDragStartListener(
+                  ReorderableDelayedDragStartListener(
                     index: index,
                     child: CommonCard(
                       child: ListItem(
-                        leading:
-                            leadingBuilder != null ? leadingBuilder!(e) : null,
+                        leading: leadingBuilder != null
+                            ? leadingBuilder!(e)
+                            : null,
                         title: titleBuilder(e),
                         subtitle: subtitleBuilder != null
                             ? subtitleBuilder!(e)
@@ -505,28 +485,19 @@ class _AddDialogState extends State<AddDialog> {
   void initState() {
     super.initState();
     if (keyField != null) {
-      keyController = TextEditingController(
-        text: keyField!.value,
-      );
+      keyController = TextEditingController(text: keyField!.value);
     }
-    valueController = TextEditingController(
-      text: valueField.value,
-    );
+    valueController = TextEditingController(text: valueField.value);
   }
 
-  _submit() {
+  void _submit() {
     if (!_formKey.currentState!.validate()) return;
     if (keyField != null) {
       Navigator.of(context).pop<MapEntry<String, String>>(
-        MapEntry(
-          keyController!.text,
-          valueController.text,
-        ),
+        MapEntry(keyController!.text, valueController.text),
       );
     } else {
-      Navigator.of(context).pop<String>(
-        valueController.text,
-      );
+      Navigator.of(context).pop<String>(valueController.text);
     }
   }
 
@@ -535,12 +506,10 @@ class _AddDialogState extends State<AddDialog> {
     return CommonDialog(
       title: widget.title,
       actions: [
-        TextButton(
-          onPressed: _submit,
-          child: Text(appLocalizations.confirm),
-        )
+        TextButton(onPressed: _submit, child: Text(appLocalizations.confirm)),
       ],
       child: Form(
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         key: _formKey,
         child: Wrap(
           runSpacing: 16,
@@ -555,11 +524,15 @@ class _AddDialogState extends State<AddDialog> {
                   labelText: keyField!.label,
                 ),
                 validator: (String? value) {
+                  String? res;
                   if (keyField!.validator != null) {
-                    return keyField!.validator!(value);
+                    res = keyField!.validator!(value);
+                  }
+                  if (res != null) {
+                    return res;
                   }
                   if (value == null || value.isEmpty) {
-                    return appLocalizations.notEmpty;
+                    return appLocalizations.emptyTip(appLocalizations.key);
                   }
                   return null;
                 },
@@ -573,17 +546,41 @@ class _AddDialogState extends State<AddDialog> {
                 labelText: valueField.label,
               ),
               validator: (String? value) {
+                String? res;
                 if (valueField.validator != null) {
-                  return valueField.validator!(value);
+                  res = valueField.validator!(value);
+                }
+                if (res != null) {
+                  return res;
                 }
                 if (value == null || value.isEmpty) {
-                  return appLocalizations.notEmpty;
+                  return appLocalizations.emptyTip(appLocalizations.value);
                 }
                 return null;
               },
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _InputItem extends StatelessWidget {
+  final Widget child;
+
+  const _InputItem(this.child, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      elevation: 0,
+      key: key,
+      color: Colors.transparent,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        margin: EdgeInsets.symmetric(vertical: 8),
+        child: child,
       ),
     );
   }
